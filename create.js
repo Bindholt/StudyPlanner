@@ -12,27 +12,47 @@ function main(event) {
 
 async function createUser(event) {
     event.preventDefault();
-    const userData = {
-        fullName: event.target["full_name"].value,
-        email: event.target["email"].value,
-        phone: event.target["phone"].value,
-        userName: event.target["user_name"].value,
-        pin: event.target["pin"].value,
-    }
+    
+    resetErrorMsg();
+    
+    if(!await isUserExist(event.target["user_name"].value)) {
+        const userData = {
+            fullName: event.target["full_name"].value,
+            email: event.target["email"].value,
+            phone: event.target["phone"].value,
+            userName: event.target["user_name"].value,
+            pin: event.target["pin"].value,
+            groupName: "",
+        }
+        await postUser(userData);     
 
+    } else {
+        showErrorMsg();
+    }
+}
+
+
+async function postUser(userData) {
     const postAsJson = JSON.stringify(userData);
 
-    const res = await fetch(`${endpoint}/users/${event.target["user_name"].value}.json`, {
+    const response = await fetch(`${endpoint}/users/${userData.userName}.json`, {
         method: "PUT",
         body: postAsJson
     });
-    const data = await res.json();
-    
-    if(res.ok) {
-       window.location = "/login.html";
+
+    if (response.ok) {
+        window.location = "/login.html";
+    }
+}
+
+async function isUserExist(userName) {
+    const response = await fetch(`${endpoint}/users/${userName}.json`);
+    const data = await response.json();
+
+    if(data !== null) {
+        return true;
     } 
-
-
+    return false;
 }
 
 function createRandomPins() {
@@ -43,4 +63,15 @@ function createRandomPins() {
         document.querySelector(`label[for="${pins[i].id}"`).innerHTML = pin; 
         pins[i].value = pin;
     }
+}
+
+function resetErrorMsg() {
+    document.querySelector("#error_user_name").style.display = "none";
+    document.querySelector("#error_user_name1").style.display = "none";
+}
+
+function showErrorMsg() {
+    document.querySelector("#error_user_name").style.display = "block";
+    document.querySelector("#error_user_name1").style.display = "block";
+    document.querySelector("#user_name").focus();
 }
