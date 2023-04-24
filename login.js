@@ -13,20 +13,26 @@ async function login(event) {
     const userName = document.querySelector("#user_name").value;
 
     const response = await fetch(`${endpoint}/users/${userName}.json`);
-    
-    const data = await response.json();
 
-    if(response.ok && await validPin(data.pin)) { 
-        alert("SUCCESS! :D");
-        //set localStorage
+    const userData = await response.json();
+
+    if(response.ok && await validPin(userData.pin)) { 
+        await setLocalStorage(userData);
+        window.location = "/main.html";
     } else {
         alert("WRONG PASSWORD >:(");
     }
-    console.log(data);
+    console.log(userData);
 }
 
 async function validPin(fetchedPin) {
     const pin = document.querySelector("#pin").value;
 
     return pin === fetchedPin;
+}
+
+async function setLocalStorage(userData) {
+    localStorage.setItem("userName", userData.userName);
+    localStorage.setItem("groupName", userData.groupName);
+    
 }
