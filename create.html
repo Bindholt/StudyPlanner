@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="#" type="image/x-icon">
+    <title>Create User</title>
+</head>
+<body>
+    <form action="" method="get" id="sign_up">
+        <label for="full_name">Full name:</label><input type="text" id="full_name" name="full_name" required>
+        <label for="email">E-mail:</label><input type="email" id="email" name="email" required>
+        <label for="phone">Phone no.:</label><input type="text" id="phone" name="phone" required>
+        <fieldset>
+            <legend>User</legend>
+            <label for="user_name">Username:</label><input type="text" id="user_name" name="user_name" required>
+            <span>Choose pin:</span><span></span>
+            <input type="radio" id="pin0" name="pin" checked><label for="pin0"></label>
+            <input type="radio" id="pin1" name="pin"><label for="pin1"></label>
+            <input type="radio" id="pin2" name="pin"><label for="pin2"></label>
+            <input type="radio" id="pin3" name="pin"><label for="pin3"></label>
+            <input type="button" value="Refresh pins" id="btn_refresh">
+        </fieldset>
+        <input type="submit" id="btn_submit" value="Create User">
+        <input type="reset" value="Clear form">
+    </form>
+    <script src="create.js"></script>
+</body>
+</html>
