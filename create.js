@@ -6,7 +6,8 @@ window.addEventListener("load", main);
 
 function main(event) {
     document.querySelector("#sign_up").addEventListener("submit", createUser);
-    document.querySelector("#btn_refresh").addEventListener("mouseup", createRandomPins);
+    document.querySelector("#btn_refresh_pins").addEventListener("mouseup", createRandomPins);
+    document.querySelector("#btn_go_to_login").addEventListener("mouseup", goToLogin);
     createRandomPins();
 }
 
@@ -74,4 +75,8 @@ function showErrorMsg() {
     document.querySelector("#error_user_name").style.display = "block";
     document.querySelector("#error_user_name1").style.display = "block";
     document.querySelector("#user_name").focus();
+}
+
+function goToLogin() {
+    window.location = "/login.html";
 }
