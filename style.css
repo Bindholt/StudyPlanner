@@ -1,0 +1,24 @@
+body {
+    margin:50px;
+}
+
+#signup {
+    padding:10px;
+    display:grid;
+    grid-template-columns: auto auto;
+    gap:5px;
+    max-width: 20em;
+    border: 2px solid black;
+    text-align: left;
+}
+
+#signup fieldset {
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+}
+
+#pay-frequency-div {
+    padding-block-start: 1.2em;
+}
