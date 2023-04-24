@@ -22,3 +22,8 @@ form fieldset {
 #pay-frequency-div {
     padding-block-start: 1.2em;
 }
+
+.error_msg {
+    display: none;
+    color:red;
+}
