@@ -16,7 +16,7 @@ async function login(event) {
     const response = await fetch(`${endpoint}/users/${userName}.json`);
     const data = await response.json();
 
-    if(response.ok && await validPin(data.pin)) {
+    if(response.ok && await validPin(data.pin)) { 
         alert("SUCCESS! :D");
         //set localStorage
     } else {
