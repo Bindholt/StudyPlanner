@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="#" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="calendar.css">
     <title>Calendar</title>
 </head>
@@ -25,14 +24,29 @@
     
     </ul>
 
-    <dialog>
-        <div id="study_date_grid">
-            <div>16:00-18:00</div>
-            <div>Studie</div>
+    <dialog id="dialog_day">
+        <h3 id="date_header"></h3>
+        <div id="existing_dates">
+            <h4>Tidspunkt</h4>
+            <h4>Beskrivelse</h4>
         </div>
         <form>
-            
-        </form>
+            <fieldset>
+                <legend>Opret ny begivenhed</legend>
+                <label for="event_from">Fra:</label>
+                <label for="event_to">Til:</label>
+                <select name="event_from" id="event_from">
+                    <option></option>
+                </select>
+                <select name="event_to" id="event_to">
+                    <option></option>
+                </select>
+                <label for="study_date_description">Beskrivelse</label>
+                <textarea name="study_date_description" id="study_date_description"></textarea>
+                <input type="submit" id="submit_btn" value="Opret aftale"><input type="reset">
+            </fieldset>
+
+        </form> 
     </dialog>
 
     <script src="calendar.js"></script>

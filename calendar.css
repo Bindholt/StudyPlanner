@@ -1,8 +1,33 @@
-#study_date_grid {
-  display:grid;
+#existing_dates {
+  display:none;
   grid-template-columns: auto auto;
+  gap: 10px; 
+  max-width: 35em;
 }
 
+form {
+  grid-column: 1 / span 2;
+  padding:10px;
+  display:grid;
+  grid-template-columns: auto auto;
+  gap:5px;
+  text-align: left;
+}
+
+form fieldset {
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+}
+
+label[for=study_date_description] {
+  grid-column: 1 / span 2;
+}
+
+#study_date_description {
+  grid-column: 1 / span 2;
+}
 
 * {box-sizing: border-box;}
 ul {list-style-type: none;}
@@ -66,6 +91,7 @@ body {font-family: Verdana, sans-serif;}
   margin-bottom: 5px;
   font-size:12px;
   color: #777;
+  cursor: pointer;
 }
 
 .days li .active {
