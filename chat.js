@@ -30,6 +30,14 @@ function setEventListeners() {
   document
     .querySelector("#btn_submit")
     .addEventListener("mouseup", btnSubmitEvent);
+
+  document
+    .querySelector("#chat_input")
+    .addEventListener("keydown", function (event) {
+      if (event.keyCode === 13) {
+        EnterSubmitEvent();
+      }
+    });
 }
 
 function prepareData(dataObject) {
@@ -118,6 +126,11 @@ function createHtmlChat() {
 
 function btnSubmitEvent(event) {
   event.preventDefault();
+  const chatTextInput = document.querySelector("#chat_input").value;
+  createChat(chatTextInput, time, user);
+  clearInput();
+}
+function EnterSubmitEvent(event) {
   const chatTextInput = document.querySelector("#chat_input").value;
   createChat(chatTextInput, time, user);
   clearInput();
