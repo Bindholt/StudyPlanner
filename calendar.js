@@ -160,6 +160,6 @@ async function postEvent(event) {
     });
 
     if (response.ok) {
-        //window.location = window.location();
+        window.location = window.location();
     }
 }
