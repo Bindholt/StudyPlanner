@@ -2,6 +2,7 @@
 
 window.addEventListener("load", main);
 
+const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 let month = new Date().getMonth() + 1;
 let year = new Date().getFullYear();
 
@@ -65,6 +66,7 @@ function setEventListeners() {
     document.querySelector("#prev").addEventListener("mouseup", decrementMonth);
     document.querySelector("#next").addEventListener("mouseup", incrementMonth);
     document.querySelector("#event_from").addEventListener("change", setDateToHTML);
+    document.querySelector("#date_form").addEventListener("submit", postEvent);
 }
 
 function incrementMonth() {
@@ -105,7 +107,7 @@ function setDialogHTML() {
         for (let minute = 0; minute < 60; minute += 15) {
             const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
             const selectHTML = /* html */ `
-                <option value="${hour + "," + minute}">${time}</option>
+                <option value="${hour + ":" + minute}">${time}</option>
             `
             document.querySelector("#event_from").insertAdjacentHTML("beforeend", selectHTML);
         }
@@ -121,19 +123,18 @@ function setDateToHTML() {
         select.innerHTML = "";
         select.insertAdjacentHTML("afterbegin", "<option></option>");
 
-        let hour = Number(fromTime.substring(0, fromTime.indexOf(",")));
-        let minute = Number(fromTime.substring(fromTime.indexOf(",") +1, fromTime.length)) + 15;
+        let hour = Number(fromTime.substring(0, fromTime.indexOf(":")));
+        let minute = Number(fromTime.substring(fromTime.indexOf(":") +1, fromTime.length)) + 15;
 
         for (hour; hour < 24; hour++) {
             for (minute; minute < 60; minute += 15) {
                 const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
                 const selectHTML = /* html */ `
-                    <option value="${hour + "," + minute}">${time}</option>
+                    <option value="${hour + ":" + minute}">${time}</option>
                 `
                 select.insertAdjacentHTML("beforeend", selectHTML);
             }
             minute = 0;
-        
         }
     } else {
         select.disabled = true;
@@ -141,9 +142,11 @@ function setDateToHTML() {
 }
 
 async function postEvent(event) {
+    event.preventDefault();
+    const formDate = document.querySelector("#date_header").innerText;
+    const day = formDate.substring(0, formDate.indexOf("/"));
     const eventData = {
-        date: event.target["date_header"].innerText,
-        group: localStorage.getItem("groupName"),
+        group: (localStorage.getItem("groupName").length > 0) ? localStorage.getItem("groupName") : "emptyGroup",
         fromTime: event.target["event_from"].value,
         toTime: event.target["event_to"].value,
         description: event.target["study_date_description"].value,
@@ -151,12 +154,12 @@ async function postEvent(event) {
 
     const postAsJson = JSON.stringify(eventData);
 
-    const response = await fetch(`${endpoint}/events/${eventData.group}/${date}/${fromTime}.json`, {
+    const response = await fetch(`${endpoint}/events/${eventData.group}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
         method: "PUT",
         body: postAsJson
     });
 
     if (response.ok) {
-        window.location = "/login.html";
+        //window.location = window.location();
     }
 }
