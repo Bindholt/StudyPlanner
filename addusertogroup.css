@@ -1,0 +1,22 @@
+body {
+    background-color: rgb(216, 193, 163);
+}
+
+h1 {
+    text-align: center;
+}
+
+
+#add_user_to_group {
+    display: grid;
+    position: absolute;
+    grid-template-columns: auto;
+    top: 10%;
+    gap: 5px;
+    left: 44.6%;
+    margin: 0;
+    padding: 15px;
+    align-items: center;
+    border: solid black 2px;
+    border-radius: 1em;
+}
