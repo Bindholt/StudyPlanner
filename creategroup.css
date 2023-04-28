@@ -28,3 +28,26 @@ h1 {
     font-size: xx-large;
     font-weight: 600;
 }
+
+#button_to_main {
+    display: grid;
+    position: absolute;
+    padding: 10px;
+    margin: 0;
+    left: 45%;
+    top: 80%;
+    text-align: center;
+    font-size: larger;
+    color: blue;
+    border: solid black 2px;
+    border-radius: 2em;
+    background-color: green;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+#link_to_main {
+    color: black;
+}

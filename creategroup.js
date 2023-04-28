@@ -19,7 +19,7 @@ async function createGroup(event) {
   if (!(await isUserGroup(event.target["group_name"].value))) {
     const userData = {
       groupName: event.target["group_name"].value,
-      medlemmer: "",
+      medlemmer: {},
       pin: event.target["pin"].value,
     };
     await postGroup(userData);
