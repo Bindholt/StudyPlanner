@@ -19,7 +19,7 @@ async function createGroup(event) {
   if (!(await isUserGroup(event.target["group_name"].value))) {
     const userData = {
       groupName: event.target["group_name"].value,
-      medlemmer: '',
+      medlemmer: "",
       pin: event.target["pin"].value,
     };
     await postGroup(userData);
@@ -36,6 +36,12 @@ async function postGroup(userData) {
 
   if (response.ok) {
     console.log("Det gået igennem");
+
+    const html = /*html*/ `
+<p>Group Created</p>
+
+`;
+    document.querySelector("#groupCreated").insertAdjacentHTML("beforeend", html);
   }
 }
 
