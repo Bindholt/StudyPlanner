@@ -41,8 +41,10 @@
                 <select name="event_to" id="event_to">
                     <option></option>
                 </select>
+                <span class="error_msg" id="error_missing_time">Start tidspunkt skal udfyldes</span>
+                <span class="error_msg" id="error_exists">Aftale er allerede oprettet på dette starttidspunkt</span>
                 <label for="study_date_description">Beskrivelse</label>
-                <textarea name="study_date_description" id="study_date_description"></textarea>
+                <textarea name="study_date_description" id="study_date_description" required></textarea>
                 <input type="submit" id="submit_btn" value="Opret aftale"><input type="reset">
             </fieldset>
 

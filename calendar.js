@@ -18,7 +18,7 @@ async function main(event) {
     setDialogHTML();
 }
 
-function setDaysHTML(daysArray, monthlyEvents) {
+function setDaysHTML(daysArray, monthlyEvents) {    
     document.querySelector("#days").innerHTML = "";
     console.log(daysArray);
 
@@ -113,12 +113,12 @@ async function decrementMonth() {
 }
 
 async function dialogOpen(day) {
+    resetExistingDateHTML();
     document.querySelector("#date_header").innerHTML = `${day}/${month}/${year}`;
     const dailyEvents = await getDailyEvents(day);
     if (dailyEvents) {
         setExistingDateHTML(dailyEvents);
     }
-
     document.querySelector("#dialog_day").showModal();
 }
 
@@ -126,9 +126,11 @@ function setDialogHTML() {
     document.querySelector("#event_to").disabled = true;
     for (let hour = 8; hour < 24; hour++) {
         for (let minute = 0; minute < 60; minute += 15) {
-            const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            const padHour = hour.toString().padStart(2, '0');
+            const padMinute = minute.toString().padStart(2, '0');
+            const time = `${padHour}:${padMinute}`;
             const selectHTML = /* html */ `
-                <option value="${hour + ":" + minute}">${time}</option>
+                <option value="${padHour + ":" + padMinute}">${time}</option>
             `
             document.querySelector("#event_from").insertAdjacentHTML("beforeend", selectHTML);
         }
@@ -149,9 +151,11 @@ function setDateToHTML() {
 
         for (hour; hour < 24; hour++) {
             for (minute; minute < 60; minute += 15) {
-                const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                const padHour = hour.toString().padStart(2, '0');
+                const padMinute = minute.toString().padStart(2, '0');
+                const time = `${padHour}:${padMinute}`;
                 const selectHTML = /* html */ `
-                    <option value="${hour + ":" + minute}">${time}</option>
+                    <option value="${padHour + ":" + padMinute}">${time}</option>
                 `
                 select.insertAdjacentHTML("beforeend", selectHTML);
             }
@@ -159,29 +163,6 @@ function setDateToHTML() {
         }
     } else {
         select.disabled = true;
-    }
-}
-
-async function postEvent(event) {
-    event.preventDefault();
-    const formDate = document.querySelector("#date_header").innerText;
-    const day = formDate.substring(0, formDate.indexOf("/"));
-    const eventData = {
-        group: (localStorage.getItem("groupName").length > 0) ? localStorage.getItem("groupName") : "emptyGroup",
-        fromTime: event.target["event_from"].value,
-        toTime: event.target["event_to"].value,
-        description: event.target["study_date_description"].value,
-    }
-
-    const postAsJson = JSON.stringify(eventData);
-
-    const response = await fetch(`${endpoint}/events/${eventData.group}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
-        method: "PUT",
-        body: postAsJson
-    });
-
-    if (response.ok) {
-        window.location = window.location;
     }
 }
 
@@ -210,10 +191,108 @@ async function getDailyEvents(day) {
 
 async function setExistingDateHTML(dailyEvents) {
     for (let event in dailyEvents) {
-        if (dailyEvents[event]["toTime"].length > 0) {
-            console.log(dailyEvents[event]["toTime"]);
-        } else {
-            console.log("toTime is nothing");
+        document.querySelector("#existing_dates").style.display = "grid";
+        const myHTML = /* html */ `
+                <div>${dailyEvents[event]["fromTime"]}${(dailyEvents[event]["toTime"]) ? " - " + dailyEvents[event]["toTime"] : "" }</div>
+                <div>${dailyEvents[event]["description"]}</div>
+                <div></div>
+                <div><input type="button" id="update_${dailyEvents[event]["fromTime"]}" value="Opdatér aftale"> <input type="button" id="delete_${dailyEvents[event]["fromTime"]}" value="Slet aftale"></div>
+            `
+        document.querySelector("#existing_dates").insertAdjacentHTML("beforeend", myHTML);
+        document.querySelector(`#delete_${dailyEvents[event]["fromTime"].replace(":", "\\:")}`).addEventListener("mouseup", deleteEvent);
+        document.querySelector(`#update_${dailyEvents[event]["fromTime"].replace(":", "\\:")}`).addEventListener("mouseup", updateEvent);
+        
+    }
+}
+
+function resetExistingDateHTML() {
+    const defaultHTML = /* html */ `
+        <h4>Tidspunkt</h4>
+        <h4>Beskrivelse</h4>
+    `
+    document.querySelector("#existing_dates").innerHTML = defaultHTML;
+    document.querySelector("#existing_dates").style.display = "none";
+    document.querySelector("#error_exists").style.display = "none";
+    document.querySelector("#error_missing_time").style.display = "none";
+    document.querySelector("#study_date_description").value = "";
+    document.querySelector("#event_from").value = "";
+}
+
+async function isEventExist(day, fromTime) {
+    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
+    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}/${fromTime}.json`);
+    const data = await response.json();
+
+    if(data !== null) {
+        showErrorMsgExists();
+        return true;
+    } 
+    return false;
+}
+
+function validForm(){
+    const returnVal = document.querySelector("#event_from").value !== "";
+    
+    if(!returnVal) {
+        showErrorMsgForm();
+    }
+
+    return returnVal;
+}
+
+function showErrorMsgExists() {
+    document.querySelector("#error_missing_time").style.display = "none";
+    document.querySelector("#error_exists").style.display = "block";
+}
+
+function showErrorMsgForm() {
+    document.querySelector("#error_exists").style.display = "none";
+    document.querySelector("#error_missing_time").style.display = "block";
+}
+
+async function postEvent(event) {
+    event.preventDefault();
+    const formDate = document.querySelector("#date_header").innerText;
+    const day = formDate.substring(0, formDate.indexOf("/"));
+    if(validForm() && !await isEventExist(day, event.target["event_from"].value)) {
+        const eventData = {
+            group: (localStorage.getItem("groupName").length > 0) ? localStorage.getItem("groupName") : "emptyGroup",
+            fromTime: event.target["event_from"].value,
+            toTime: event.target["event_to"].value,
+            description: event.target["study_date_description"].value,
+        }
+
+        const postAsJson = JSON.stringify(eventData);
+        
+        const response = await fetch(`${endpoint}/events/${eventData.group}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
+            method: "PUT",
+            body: postAsJson
+        });
+
+        if (response.ok) {
+            window.location = window.location;
         }
     }
+}
+
+async function deleteEvent(event) {
+    const formDate = document.querySelector("#date_header").innerText;
+    const day = formDate.substring(0, formDate.indexOf("/"));
+    const id = event.target.id;
+    const time = id.substring(id.indexOf("_") + 1, id.length);   
+
+    
+    if(confirm(`Er du sikker på at du gerne vil slette aftalen som starter ${time}?`)) {  
+        const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}/${time}.json`, {
+            method: "DELETE"
+        });
+
+        if (response.ok) {
+            window.location = window.location;
+        }
+    }
+}   
+
+async function updateEvent(event) {
+
 }
