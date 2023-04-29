@@ -2,7 +2,7 @@
   display: none;
   grid-template-columns: auto auto;
   gap: 10px; 
-  max-width: 35em;
+  min-width: 35em;
 }
 
 form {
@@ -12,6 +12,7 @@ form {
   grid-template-columns: auto auto;
   gap:5px;
   text-align: left;  
+  min-width: 35em;
 }
 
 form fieldset {
@@ -19,6 +20,12 @@ form fieldset {
     display: grid;
     grid-template-columns: auto auto;
     gap: 5px;
+}
+
+.error_msg {
+  grid-column: 1 / span 2;
+  color:red;
+  display: none;
 }
 
 label[for=study_date_description] {
