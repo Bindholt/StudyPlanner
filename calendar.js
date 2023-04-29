@@ -6,22 +6,34 @@ const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebased
 let month = new Date().getMonth() + 1;
 let year = new Date().getFullYear();
 
-function main(event) {
+async function main(event) {
     setEventListeners();
-    setDaysHTML();
+    
+    const monthlyEvents = await getMonthlyEvents();
+    const daysArray = getDaysOfMonth();
+    setDaysHTML(daysArray, ((monthlyEvents) ? monthlyEvents : "") );
+
     setYearMonthHTML();
+
     setDialogHTML();
 }
 
-function setDaysHTML() {
+function setDaysHTML(daysArray, monthlyEvents) {
     document.querySelector("#days").innerHTML = "";
-    const daysArray = getDaysOfMonth();
     console.log(daysArray);
 
     for (let i = 0; i < daysArray.length; i++) {
-        const listHTML = /* html */ `
-            <li id=${"day" + i}>${daysArray[i]}</li>
-        `
+        let listHTML;
+        if (monthlyEvents[daysArray[i]]) {
+            listHTML = /* html */ `
+                <li id=${"day" + i}><span class="active">${daysArray[i]}</span></li>
+            `
+        } else {
+            listHTML = /* html */ `
+                <li id=${"day" + i}>${daysArray[i]}</li>
+            `
+        }
+        
         document.querySelector("#days").insertAdjacentHTML("beforeend", listHTML);
         document.querySelector("#day" + i).addEventListener("mouseup", function() {
             dialogOpen(daysArray[i]);
@@ -69,7 +81,7 @@ function setEventListeners() {
     document.querySelector("#date_form").addEventListener("submit", postEvent);
 }
 
-function incrementMonth() {
+async function incrementMonth() {
     if (month === 12) {
         month = 1;
         year++;
@@ -77,12 +89,15 @@ function incrementMonth() {
         month++;
     }
     setYearMonthHTML();
-    setDaysHTML(year, month)
+    
+    const monthlyEvents = await getMonthlyEvents();
+    const daysArray = getDaysOfMonth();
+    setDaysHTML(daysArray, (monthlyEvents === null ? [] : monthlyEvents))
 
     //todo: tjekke efter studiedates på datoer
 }
 
-function decrementMonth() {
+async function decrementMonth() {
     if (month === 1) {
         month = 12;
         year--;
@@ -90,14 +105,20 @@ function decrementMonth() {
         month--;
     }
     setYearMonthHTML();
-    setDaysHTML(year, month)
-    
+
+    const monthlyEvents = await getMonthlyEvents();
+    const daysArray = getDaysOfMonth();
+    setDaysHTML(daysArray, (monthlyEvents === null ? [] : monthlyEvents))
     //todo: tjekke efter studiedates på datoer
 }
 
-function dialogOpen(day) {
-    console.log(day);
+async function dialogOpen(day) {
     document.querySelector("#date_header").innerHTML = `${day}/${month}/${year}`;
+    const dailyEvents = await getDailyEvents(day);
+    if (dailyEvents) {
+        setExistingDateHTML(dailyEvents);
+    }
+
     document.querySelector("#dialog_day").showModal();
 }
 
@@ -160,6 +181,39 @@ async function postEvent(event) {
     });
 
     if (response.ok) {
-        window.location = window.location();
+        window.location = window.location;
+    }
+}
+
+async function getMonthlyEvents() {
+    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
+    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}.json`);
+    const monthlyEvents = await response.json()
+    if (response.ok) {
+        return monthlyEvents;
+    } else {
+        console.log("Somethings wrong. CALL IT!");
+        return "";
+    }
+}
+
+async function getDailyEvents(day) {
+    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
+    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}.json`);
+    const dailyEvent = await response.json()
+    if (response.ok) {
+        return dailyEvent;
+    } else {
+        return false;
+    }
+}
+
+async function setExistingDateHTML(dailyEvents) {
+    for (let event in dailyEvents) {
+        if (dailyEvents[event]["toTime"].length > 0) {
+            console.log(dailyEvents[event]["toTime"]);
+        } else {
+            console.log("toTime is nothing");
+        }
     }
 }
