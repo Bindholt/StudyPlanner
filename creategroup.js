@@ -15,12 +15,14 @@ function main(event) {
 
 async function createGroup(event) {
   event.preventDefault();
+  const groupCode = autoGPassword();
 
   if (!(await isUserGroup(event.target["group_name"].value))) {
     const userData = {
       groupName: event.target["group_name"].value,
       medlemmer: {},
       pin: event.target["pin"].value,
+      groupCode: groupCode,
     };
     await postGroup(userData);
   }
@@ -63,4 +65,18 @@ function createRandomPins() {
     document.querySelector(`label[for="${pins[i].id}"`).innerHTML = pin;
     pins[i].value = pin;
   }
+}
+
+function autoGPassword() {
+  let pass = "";
+
+  let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
+
+  for (let i = 1; i <= 10; i++) {
+    let generate = Math.floor(Math.random() * str.length + 1);
+
+    pass += str.charAt(generate);
+  }
+  
+  return pass;
 }
