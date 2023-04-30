@@ -9,6 +9,7 @@ h1 {
 
 #add_user_to_group {
     display: grid;
+    background-color: white;
     position: absolute;
     grid-template-columns: auto;
     top: 10%;
