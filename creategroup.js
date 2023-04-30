@@ -3,29 +3,43 @@
 window.addEventListener("load", main);
 
 const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
+const user = localStorage.getItem("userName");  
 
 function main(event) {
   console.log("Hello");
 
   document.querySelector("#createGroup").addEventListener("submit", createGroup);
-  document.querySelector("#btn_refresh_pins").addEventListener("mouseup", createRandomPins);
 
   createRandomPins();
 }
 
 async function createGroup(event) {
-  event.preventDefault();
-  const groupCode = autoGPassword();
+  event.preventDefault(); 
+  const inviteCode = await createInviteCode();
 
   if (!(await isUserGroup(event.target["group_name"].value))) {
     const userData = {
       groupName: event.target["group_name"].value,
-      medlemmer: {},
-      pin: event.target["pin"].value,
-      groupCode: groupCode,
+      inviteCode: inviteCode,
+      members: {"0": user}
     };
     await postGroup(userData);
+    await postInviteCode(userData);
   }
+}
+
+async function postInviteCode(userData) {
+  const postAsJson = JSON.stringify(userData);
+
+  const response = await fetch(`${endpoint}/inviteCodes/${userData.inviteCode}.json`, {
+    method: "PUT",
+    body: postAsJson,
+  }); 
+  if (response.ok) {
+    console.log("Invite codes igennem")
+  }
+
+
 }
 
 async function postGroup(userData) {
@@ -67,16 +81,27 @@ function createRandomPins() {
   }
 }
 
-function autoGPassword() {
-  let pass = "";
 
-  let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "abcdefghijklmnopqrstuvwxyz0123456789@#$";
-
-  for (let i = 1; i <= 10; i++) {
-    let generate = Math.floor(Math.random() * str.length + 1);
-
-    pass += str.charAt(generate);
+async function createInviteCode() { 
+  const pin = (Math.floor(Math.random() * 10000000) + 10000000).toString().substring(1);
+  if (!await doesCodeExist(pin)) {
+    console.log(pin);
+    return pin;
+  } else {
+    createInviteCode();
   }
-  
-  return pass;
+}
+
+async function doesCodeExist(inviteCode) {
+  console.log("test1")
+
+  const response = await fetch(`${endpoint}/inviteCodes/${inviteCode}.json`);
+  const data = await response.json();
+  console.log("Test2")
+  if (data !== null) {
+    console.log("Test3")
+    return true;
+  }
+  console.log("Test4")
+  return false;
 }
