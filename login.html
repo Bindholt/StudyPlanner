@@ -12,7 +12,8 @@
     <form action="" method="get" id="sign_in">
         <label for="user_name">Username:</label><input type="text" id="user_name" name="user_name" required>
         <label for="pin">Pin:</label><input type="password" name="pin" id="pin" maxlength="4" required>
-        <span id="error_pin1" class="error_msg"></span><span id="error_pin" class="error_msg">Wrong pin!</span>
+        <span id="error_pin1" class="error_msg"></span><span id="error_pin" class="error_msg">Pin is incorrect</span>
+        <span id="error_user1" class="error_msg"></span><span id="error_user" class="error_msg">Username does not exist</span>
         <input type="submit" id="btn_submit" value="Sign in">
     </form>
     <div>
