@@ -20,6 +20,11 @@ function setEventListener() {
 }
 
 async function leaveGroup() {
-    const groupFetch = await fetch(`${endpoint}/group/${group}/members/2.json`);
-    console.log(groupFetch.json());
+    const groupDelete = await fetch(`${endpoint}/group/${group}/members/${user}.json`, {
+        method: "DELETE",
+    });
+
+    const userDelete = await fetch(`${endpoint}/users/${user}/groupName.json`, {
+        method: "DELETE",
+    });
 }
