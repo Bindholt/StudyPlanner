@@ -6,6 +6,7 @@ window.addEventListener("load", main);
 
 function main() {
     document.querySelector("#sign_in").addEventListener("submit", login);
+    document.querySelector("#btn_go_to_create").addEventListener("mouseup", goToCreate);
 }
 
 async function login(event) {
@@ -20,9 +21,8 @@ async function login(event) {
         await setLocalStorage(userData);
         window.location = "/main.html";
     } else {
-        alert("WRONG PASSWORD >:(");
+        showErrorMsg();
     }
-    console.log(userData);
 }
 
 async function validPin(fetchedPin) {
@@ -33,6 +33,15 @@ async function validPin(fetchedPin) {
 
 async function setLocalStorage(userData) {
     localStorage.setItem("userName", userData.userName);
-    localStorage.setItem("groupName", userData.groupName);
-    
+    localStorage.setItem("groupName", userData.groupName);   
+}
+
+function goToCreate() {
+    window.location = "/create.html";
+}
+
+function showErrorMsg() {
+    document.querySelector("#error_pin").style.display = "block";
+    document.querySelector("#error_pin1").style.display = "block";
+    document.querySelector("#pin").focus();
 }
