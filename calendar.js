@@ -5,6 +5,7 @@ window.addEventListener("load", main);
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 let month = new Date().getMonth() + 1;
 let year = new Date().getFullYear();
+const groupName = (localStorage.getItem("groupName").length > 0 ? localStorage.getItem("groupName") : "testGroup")
 
 async function main(event) {
     setEventListeners();
@@ -77,7 +78,7 @@ function getCurrentDate() {
 function setEventListeners() {
     document.querySelector("#prev").addEventListener("mouseup", decrementMonth);
     document.querySelector("#next").addEventListener("mouseup", incrementMonth);
-    document.querySelector("#event_from").addEventListener("change", setDateToHTML);
+    document.querySelector("#event_from").addEventListener("change", setUntilDateSelectHTML);
     document.querySelector("#date_form").addEventListener("submit", postEvent);
 }
 
@@ -113,7 +114,7 @@ async function decrementMonth() {
 }
 
 async function dialogOpen(day) {
-    resetExistingDateHTML();
+    resetDialog();
     document.querySelector("#date_header").innerHTML = `${day}/${month}/${year}`;
     const dailyEvents = await getDailyEvents(day);
     if (dailyEvents) {
@@ -123,7 +124,7 @@ async function dialogOpen(day) {
 }
 
 function setDialogHTML() {
-    document.querySelector("#event_to").disabled = true;
+    document.querySelector("#event_until").disabled = true;
     for (let hour = 8; hour < 24; hour++) {
         for (let minute = 0; minute < 60; minute += 15) {
             const padHour = hour.toString().padStart(2, '0');
@@ -137,9 +138,9 @@ function setDialogHTML() {
     }
 }
 
-function setDateToHTML() {
+function setUntilDateSelectHTML() {
     const fromTime = document.querySelector("#event_from").value;
-    const select = document.querySelector("#event_to");
+    const select = document.querySelector("#event_until");
 
     if (fromTime.length > 0) {
         select.disabled = false;
@@ -167,8 +168,7 @@ function setDateToHTML() {
 }
 
 async function getMonthlyEvents() {
-    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
-    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}.json`);
+    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}.json`);
     const monthlyEvents = await response.json()
     if (response.ok) {
         return monthlyEvents;
@@ -179,8 +179,7 @@ async function getMonthlyEvents() {
 }
 
 async function getDailyEvents(day) {
-    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
-    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}.json`);
+    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}.json`);
     const dailyEvent = await response.json()
     if (response.ok) {
         return dailyEvent;
@@ -193,34 +192,52 @@ async function setExistingDateHTML(dailyEvents) {
     for (let event in dailyEvents) {
         document.querySelector("#existing_dates").style.display = "grid";
         const myHTML = /* html */ `
-                <div>${dailyEvents[event]["fromTime"]}${(dailyEvents[event]["toTime"]) ? " - " + dailyEvents[event]["toTime"] : "" }</div>
+                <div>${dailyEvents[event]["fromTime"]}${(dailyEvents[event]["untilTime"]) ? " - " + dailyEvents[event]["untilTime"] : "" }</div>
                 <div>${dailyEvents[event]["description"]}</div>
                 <div></div>
                 <div><input type="button" id="update_${dailyEvents[event]["fromTime"]}" value="Opdatér aftale"> <input type="button" id="delete_${dailyEvents[event]["fromTime"]}" value="Slet aftale"></div>
             `
         document.querySelector("#existing_dates").insertAdjacentHTML("beforeend", myHTML);
         document.querySelector(`#delete_${dailyEvents[event]["fromTime"].replace(":", "\\:")}`).addEventListener("mouseup", deleteEvent);
-        document.querySelector(`#update_${dailyEvents[event]["fromTime"].replace(":", "\\:")}`).addEventListener("mouseup", updateEvent);
+        document.querySelector(`#update_${dailyEvents[event]["fromTime"].replace(":", "\\:")}`).addEventListener("mouseup", function() {
+            editEvent(dailyEvents[event]["fromTime"], dailyEvents[event]["untilTime"], dailyEvents[event]["description"])
+        });
         
     }
 }
 
-function resetExistingDateHTML() {
+function resetDialog() {
+    const dateForm = document.querySelector("#date_form");
+    const fieldset = dateForm.querySelector("fieldset");
     const defaultHTML = /* html */ `
         <h4>Tidspunkt</h4>
         <h4>Beskrivelse</h4>
     `
-    document.querySelector("#existing_dates").innerHTML = defaultHTML;
-    document.querySelector("#existing_dates").style.display = "none";
-    document.querySelector("#error_exists").style.display = "none";
-    document.querySelector("#error_missing_time").style.display = "none";
-    document.querySelector("#study_date_description").value = "";
-    document.querySelector("#event_from").value = "";
+    const existingDates = document.querySelector("#existing_dates");
+    existingDates.innerHTML = defaultHTML;
+    existingDates.style.display = "none";
+    
+    fieldset.querySelector("#error_exists").style.display = "none";
+    fieldset.querySelector("#error_missing_time").style.display = "none";
+    fieldset.querySelector("#study_date_description").value = "";
+     
+    const fromSelect = fieldset.querySelector("#event_from") 
+    const untilSelect = fieldset.querySelector("#event_until")
+    fromSelect.value = "";
+    fromSelect.disabled = false;
+    untilSelect.value = "";
+
+    dateForm.removeEventListener("submit", postEvent);
+    dateForm.removeEventListener("submit", updateEvent);
+    dateForm.addEventListener("submit", postEvent);
+    
+    fieldset.querySelector("legend").innerText = "Opret ny begivenhed";
+    fieldset.querySelector("#submit_btn").value = "Opret aftale";
+    fieldset.querySelector("#reset_btn").disabled = false;
 }
 
 async function isEventExist(day, fromTime) {
-    //todo ikke hardcode. emptyGroup = localStorage.getItem("groupName").
-    const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}/${fromTime}.json`);
+    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${fromTime}.json`);
     const data = await response.json();
 
     if(data !== null) {
@@ -250,15 +267,57 @@ function showErrorMsgForm() {
     document.querySelector("#error_missing_time").style.display = "block";
 }
 
+
+async function editEvent(fromTime, untilTime, description) {
+    const form = document.querySelector("#date_form");
+    const fieldset = form.querySelector("fieldset");
+    const fromSelect = fieldset.querySelector("#event_from");
+    const untilSelect = fieldset.querySelector("#event_until");
+    const descriptionTextArea = fieldset.querySelector("#study_date_description");
+
+    fieldset.querySelector("legend").innerText = "Opdatér begivenhed " + fromTime;
+    fieldset.querySelector("#submit_btn").value = "Opdatér aftale";
+    fieldset.querySelector("#reset_btn").disabled = true;
+    fromSelect.disabled = true;
+    fromSelect.value = fromTime;
+    setUntilDateSelectHTML();
+    untilSelect.value = untilTime;
+    descriptionTextArea.value = description;
+    document.querySelector("#date_form").removeEventListener("submit", postEvent);
+    document.querySelector("#date_form").addEventListener("submit", updateEvent);
+}
+
+async function updateEvent(event) {
+    event.preventDefault();
+    const formDate = document.querySelector("#date_header").innerText;
+    const day = formDate.substring(0, formDate.indexOf("/"));
+    
+    const eventData = {
+        fromTime: event.target["event_from"].value,
+        untilTime: event.target["event_until"].value,
+        description: event.target["study_date_description"].value,
+    }
+
+    const postAsJson = JSON.stringify(eventData);
+    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
+        method: "PATCH",
+        body: postAsJson
+    });
+
+    if (response.ok) {
+        window.location = window.location;
+    }
+}
+
 async function postEvent(event) {
     event.preventDefault();
     const formDate = document.querySelector("#date_header").innerText;
     const day = formDate.substring(0, formDate.indexOf("/"));
     if(validForm() && !await isEventExist(day, event.target["event_from"].value)) {
         const eventData = {
-            group: (localStorage.getItem("groupName").length > 0) ? localStorage.getItem("groupName") : "emptyGroup",
+            group: groupName,
             fromTime: event.target["event_from"].value,
-            toTime: event.target["event_to"].value,
+            untilTime: event.target["event_until"].value,
             description: event.target["study_date_description"].value,
         }
 
@@ -283,7 +342,7 @@ async function deleteEvent(event) {
 
     
     if(confirm(`Er du sikker på at du gerne vil slette aftalen som starter ${time}?`)) {  
-        const response = await fetch(`${endpoint}/events/emptyGroup/${year}/${month}/${day}/${time}.json`, {
+        const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${time}.json`, {
             method: "DELETE"
         });
 
@@ -292,7 +351,3 @@ async function deleteEvent(event) {
         }
     }
 }   
-
-async function updateEvent(event) {
-
-}
