@@ -8,9 +8,8 @@ const user = localStorage.getItem("userName");
 function main(event) {
   console.log("Hello");
 
-  document.querySelector("#createGroup").addEventListener("submit", createGroup);
+  document.querySelector("#create_group").addEventListener("submit", createGroup);
 
-  createRandomPins();
 }
 
 async function createGroup(event) {
@@ -57,7 +56,7 @@ async function postGroup(userData) {
 <p>Group Created</p>
 
 `;
-    document.querySelector("#groupCreated").insertAdjacentHTML("beforeend", html);
+    document.querySelector("#group_created").insertAdjacentHTML("beforeend", html);
   }
 }
 
@@ -71,15 +70,6 @@ async function isUserGroup(groupName) {
   return false;
 }
 
-function createRandomPins() {
-  const pins = document.querySelectorAll('[name="pin"]');
-
-  for (let i = 0; i < pins.length; i++) {
-    const pin = (Math.floor(Math.random() * 10000) + 10000).toString().substring(1);
-    document.querySelector(`label[for="${pins[i].id}"`).innerHTML = pin;
-    pins[i].value = pin;
-  }
-}
 
 
 async function createInviteCode() { 
