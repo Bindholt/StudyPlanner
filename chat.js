@@ -9,13 +9,11 @@ const time = new Date().toISOString();
 const user = localStorage.getItem("userName");
 
 async function main() {
-  console.log("JSvirker");
   await updateChatGrid();
   checkChatAge();
   createHtmlChat();
   setEventListeners();
   setInterval(updateChat, 1000);
-  setInterval(scrollToBottom, 1000);
 }
 
 async function getData(url) {
@@ -62,14 +60,14 @@ function showChats(data) {
 function showSingleChat(chat) {
   const chatHTML = /*HTML*/ `
     <div class="chat_message">
-      <p>${chat.text}</p>
-      <p class="timestamp">${chat.time}</p>
-      <p class="username">${chat.userName}</p>
+    <span class="username">${chat.userName}</span>
+    <span class="timestamp">${chat.time}</span>
+    <p>${chat.text}</p>
     </div>
   `;
   document
     .querySelector(".chat_container")
-    .insertAdjacentHTML("beforeend", chatHTML);
+    .insertAdjacentHTML("afterBegin", chatHTML);
 }
 
 async function createChat(text, time, userName) {
@@ -110,8 +108,6 @@ async function checkChatAge() {
 
 function createHtmlChat() {
   const ChatInputHTML = /*html*/ `
-<h2 id='intro_tittle'>Chat service</h2>
-<p id='intro_text'>Denne JavaScript-kode er designet til at implementere en simpel chat-applikation, der tillader brugere at indsende og se beskeder. Når siden indlæses, vil koden hente tidligere beskeder fra en Firebase Realtime Database og vise dem på skærmen. Koden vil også slette beskeder, der er mere end en time gamle. Brugerne kan sende nye beskeder ved at indtaste tekst i en indtastningsboks og klikke på en "Submit" -knap, eller ved at trykke på Enter-tasten. Når en bruger sender en ny besked, vil koden sende den nye besked til Firebase-databasen og opdatere skærmen for at vise den nyeste besked. Koden opdaterer også løbende skærmen hvert sekund for at vise nye beskeder, der er indsendt af andre brugere.</p> 
 <input type="text" id="chat_input" placeholder="Type here"size="40">
 <button id='btn_submit'>submit</button>
 `;
@@ -141,10 +137,4 @@ function updateChat() {
 function clearInput() {
   document.querySelector("#chat_input").value = "";
   document.querySelector("#chat_input").focus();
-}
-
-function scrollToBottom() {
-  document
-    .querySelector(".chat_container")
-    .scrollTo(0, document.querySelector(".chat_container").scrollHeight);
 }

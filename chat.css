@@ -1,6 +1,6 @@
 /* Style for the chat container */
 .chat_container {
-  height: 600px;
+  height: 800px;
   overflow-y: scroll;
 }
 
@@ -17,11 +17,14 @@
 .chat_message .timestamp {
   font-size: small;
   margin-top: 5px;
+  float: right;
 }
 
 /* Style for the chat message username */
 .chat_message .username {
   font-weight: bold;
+  float: right;
+  margin-left: 2%;
 }
 
 /* Style for the chat input and button */
