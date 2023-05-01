@@ -2,14 +2,12 @@
 
 window.addEventListener("load", main)
 
-const displaypasswordHtml = document.getElementById("password_generated");
 const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
 const user = localStorage.getItem("userName");  
 
 function main() {
     console.log("Det kører");
 
-    document.querySelector("#auto_password").addEventListener("click", displayPassword);
     document.querySelector("#add_user_to_group").addEventListener("submit", addUserInG);
 
 }
@@ -22,10 +20,6 @@ async function addUserInG(event) {
     const amount = await findAmountOfGroupMembers(groupName);
 
     await insertMemberInGroup(amount, groupName);
-
-
-
-
 
 
 }
@@ -77,39 +71,6 @@ async function findAmountOfGroupMembers(groupName) {
 
 
 }
-
-
-
-function autoGPassword() {
-    let pass = ""
-
-    let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +'abcdefghijklmnopqrstuvwxyz0123456789@#$';
-
-    for (let i = 1; i <= 10; i++) {
-        let generate = Math.floor(Math.random() * str.length + 1 );
-
-        pass+= str.charAt(generate)
-    }
-    console.log(pass);
-    return pass;
-    
-}
-
-const displayPassword = () => {
-    displaypasswordHtml.innerHTML = autoGPassword();
-}
-
-
-
-function createRandomPins() {
-  
-
-  
-    const pin = (Math.floor(Math.random() * 10000000) + 10000000).toString().substring(1);
-    
-   return pin 
-}
-
 
 function showErrorM() {
     console.log("Error");
