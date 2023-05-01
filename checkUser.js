@@ -3,10 +3,13 @@
 window.addEventListener("load", main);
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 
+let test;
 async function main() {
     const userName = checkUser();
 
-    const group = await getStudyGroup(userName);
+    if(!checkStudyGroup()) {
+        await getStudyGroup(userName);
+    };
 }
 
 function checkUser() {
@@ -18,6 +21,13 @@ function checkUser() {
     return userName;
 }
 
+function checkStudyGroup() {
+    const groupName = localStorage.getItem("groupName");
+    return groupName !== null && (groupName.length > 0);
+}
+
 async function getStudyGroup(userName) {
-    const response = await fetch(`${endpoint}/group/CMV?/`)
+    const response = await fetch(`${endpoint}/users/${userName}/groupName.json`);
+    const groupName = await response.json();
+    localStorage.setItem("groupName", groupName);
 }
