@@ -22,7 +22,7 @@ async function createGroup(event) {
     const userData = {
       groupName: event.target["group_name"].value,
       inviteCode: inviteCode,
-      members: {"0": user}
+      members: {[user]: user}
     };
     await postGroup(userData);
     await postInviteCode(userData);

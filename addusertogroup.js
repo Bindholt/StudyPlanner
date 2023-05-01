@@ -26,7 +26,7 @@ async function addUserInG(event) {
 
 async function insertMemberInGroup(amount, groupName) {
         const userData = {
-            [amount]: user
+            [user]: user
         }
         
         const postAsJson = JSON.stringify(userData);
