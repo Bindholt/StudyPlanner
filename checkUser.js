@@ -8,9 +8,7 @@ function main() {
 
 function checkUser() {
     const userName = localStorage.getItem("userName");
-    if(userName && userName > 0) {
-        console.log("yay")
-    } else {
-        console.log("nay")
-    } 
+    if(!userName || userName.length <= 0) {
+        window.location = "/login.html";
+    }
 }
