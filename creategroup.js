@@ -2,7 +2,8 @@
 
 window.addEventListener("load", main);
 
-const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
+// const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
+const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const user = localStorage.getItem("userName");  
 
 function main(event) {
