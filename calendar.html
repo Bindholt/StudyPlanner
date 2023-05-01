@@ -1,56 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="#" type="image/x-icon">
-    <link rel="stylesheet" href="calendar.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="#" type="image/x-icon" />
+    <link rel="stylesheet" href="calendar.css" />
     <title>Calendar</title>
-</head>
-<body>    
+  </head>
+  <body>
     <h1></h1>
 
-    <div class="month">      
-    <ul>
+    <div class="month">
+      <ul>
         <li id="prev" class="prev"><</li>
         <li id="next" class="next">></li>
-        <li id="year_month">
-        </li>
-    </ul>
+        <li id="year_month"></li>
+      </ul>
     </div>
 
-    <ul id="days" class="days">  
-    
-    </ul>
+    <ul id="days" class="days"></ul>
 
     <dialog id="dialog_day">
-        <h3 id="date_header"></h3>
-        <div id="existing_dates">
-            <h4>Tidspunkt</h4>
-            <h4>Beskrivelse</h4>
-        </div>
-        <form id="date_form">
-            <fieldset>
-                <legend>Opret ny begivenhed</legend>
-                <label for="event_from">Fra:</label>
-                <label for="event_until">Til:</label>
-                <select name="event_from" id="event_from">
-                    <option></option>
-                </select>
-                <select name="event_until" id="event_until">
-                    <option></option>
-                </select>
-                <span class="error_msg" id="error_missing_time">Start tidspunkt skal udfyldes</span>
-                <span class="error_msg" id="error_exists">Aftale er allerede oprettet på dette starttidspunkt</span>
-                <label for="study_date_description">Beskrivelse</label>
-                <textarea name="study_date_description" id="study_date_description" required></textarea>
-                <input type="submit" id="submit_btn" value="Opret aftale"><input id="reset_btn" type="reset">
-            </fieldset>
-
-        </form> 
+      <h3 id="date_header"></h3>
+      <div id="existing_dates">
+        <h4>Tidspunkt</h4>
+        <h4>Beskrivelse</h4>
+      </div>
+      <form id="date_form">
+        <fieldset>
+          <legend>Opret ny begivenhed</legend>
+          <label for="event_from">Fra:</label>
+          <label for="event_until">Til:</label>
+          <select name="event_from" id="event_from">
+            <option></option>
+          </select>
+          <select name="event_until" id="event_until">
+            <option></option>
+          </select>
+          <span class="error_msg" id="error_missing_time"
+            >Start tidspunkt skal udfyldes</span
+          >
+          <span class="error_msg" id="error_exists"
+            >Aftale er allerede oprettet på dette starttidspunkt</span
+          >
+          <label for="study_date_description">Beskrivelse</label>
+          <textarea
+            name="study_date_description"
+            id="study_date_description"
+            required
+          ></textarea>
+          <input type="submit" id="submit_btn" value="Opret aftale" /><input
+            id="reset_btn"
+            type="reset"
+          />
+        </fieldset>
+      </form>
     </dialog>
 
     <script src="calendar.js"></script>
-</body>
+  </body>
 </html>
