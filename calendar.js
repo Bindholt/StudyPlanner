@@ -10,6 +10,7 @@ const groupName = (localStorage.getItem("groupName").length > 0 ? localStorage.g
 async function main(event) {
     setEventListeners();
     
+    document.querySelector("h1").innerText = groupName;
     const monthlyEvents = await getMonthlyEvents();
     const daysArray = getDaysOfMonth();
     setDaysHTML(daysArray, ((monthlyEvents) ? monthlyEvents : "") );
@@ -36,9 +37,7 @@ function setDaysHTML(daysArray, monthlyEvents) {
         }
         
         document.querySelector("#days").insertAdjacentHTML("beforeend", listHTML);
-        document.querySelector("#day" + i).addEventListener("mouseup", function() {
-            dialogOpen(daysArray[i]);
-        });
+        document.querySelector("#day" + i).addEventListener("mouseup", () => dialogOpen(daysArray[i]));
     }
 }
 
