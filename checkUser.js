@@ -6,10 +6,11 @@ const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebased
 let test;
 async function main() {
     const userName = checkUser();
-
+    
     if(!checkStudyGroup()) {
         await getStudyGroup(userName);
     };
+    console.log(await getStudyGroup(userName));
 }
 
 function checkUser() {
@@ -30,4 +31,5 @@ async function getStudyGroup(userName) {
     const response = await fetch(`${endpoint}/users/${userName}/groupName.json`);
     const groupName = await response.json();
     localStorage.setItem("groupName", groupName);
+    return groupName;
 }
