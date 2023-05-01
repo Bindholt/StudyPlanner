@@ -17,12 +17,18 @@ async function login(event) {
 
     const userData = await response.json();
 
-    if(response.ok && await validPin(userData.pin)) { 
-        await setLocalStorage(userData);
-        window.location = "/main.html";
+    if (await userData) {
+        if(response.ok && await validPin(userData.pin)) { 
+            await setLocalStorage(userData);
+            window.location = "/main.html";
+        } else {
+            showErrorMsgPin();
+        }
     } else {
-        showErrorMsg();
+        showErrorMsgUser();
     }
+    
+    
 }
 
 async function validPin(fetchedPin) {
@@ -40,8 +46,23 @@ function goToCreate() {
     window.location = "/create.html";
 }
 
-function showErrorMsg() {
+function showErrorMsgPin() {
+    resetErrorMsg();
     document.querySelector("#error_pin").style.display = "block";
     document.querySelector("#error_pin1").style.display = "block";
     document.querySelector("#pin").focus();
+}
+
+function showErrorMsgUser() {
+    resetErrorMsg();
+    document.querySelector("#error_user").style.display = "block";
+    document.querySelector("#error_user1").style.display = "block";
+    document.querySelector("#pin").focus();
+}
+
+function resetErrorMsg() {
+    document.querySelector("#error_user").style.display = "none";
+    document.querySelector("#error_user1").style.display = "none";
+    document.querySelector("#error_pin").style.display = "none";
+    document.querySelector("#error_pin1").style.display = "none";
 }
