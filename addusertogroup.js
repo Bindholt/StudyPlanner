@@ -2,7 +2,8 @@
 
 window.addEventListener("load", main)
 
-const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
+// const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
+const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const user = localStorage.getItem("userName");  
 
 function main() {
@@ -13,20 +14,19 @@ function main() {
 }
 
 async function addUserInG(event) {
-    event.preventDefault();
+  event.preventDefault();
 
-    const groupName = await findGroupName(event.target["invite_code"].value);
-    
-    const amount = await findAmountOfGroupMembers(groupName);
+  const groupName = await findGroupName(event.target["invite_code"].value);
 
-    await insertMemberInGroup(amount, groupName);
+  const amount = await findAmountOfGroupMembers(groupName);
 
-
+  await insertMemberInGroup(amount, groupName);
+  await insertGroupNameInMember(groupName);
 }
 
 async function insertMemberInGroup(amount, groupName) {
         const userData = {
-            [amount]: user
+            [user]: user
         }
         
         const postAsJson = JSON.stringify(userData);
@@ -39,8 +39,6 @@ async function insertMemberInGroup(amount, groupName) {
       if (response.ok) {
         console.log("Members igennem");
       }
-
-
 }
 
 async function findGroupName(inviteCode) {
@@ -66,12 +64,21 @@ async function findAmountOfGroupMembers(groupName) {
     console.log(i);
 
     return i;
-
-
-
-
 }
 
 function showErrorM() {
     console.log("Error");
+}
+
+async function insertGroupNameInMember(groupName) {
+  const userData = {
+    groupName
+  };
+
+  const postAsJson = JSON.stringify(userData);
+
+  const members = await fetch(`${endpoint}/users/${user}.json`, {
+        method: "PATCH",
+        body: postAsJson,
+      });
 }
