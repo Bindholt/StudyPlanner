@@ -23,9 +23,16 @@ async function createGroup(event) {
       inviteCode: inviteCode,
       members: {[user]: user}
     };
-    await postGroup(userData);
-    await postInviteCode(userData);
-    insertGroupNameInMember(event.target["group_name"].value)
+
+    const groupResponse = await postGroup(userData);
+    const codeResponse = await postInviteCode(userData);
+    const memberResponse = await insertGroupNameInMember(event.target["group_name"].value)
+
+    if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
+      goToMainMain();
+    } else {
+      console.log("There was an error");
+    }
   }
   
 }
@@ -50,9 +57,8 @@ async function postInviteCode(userData) {
     method: "PUT",
     body: postAsJson,
   }); 
-  if (response.ok) {
-    console.log("Invite codes igennem")
-  }
+
+  return response;
 }
 
 async function postGroup(userData) {
@@ -63,18 +69,7 @@ async function postGroup(userData) {
     body: postAsJson,
   });
 
-  if (response.ok) {
-    console.log("Det gået igennem");
-    goToMainMain();
-    
-
-
-    const html = /*html*/ `
-<p>Group Created</p>
-
-`;
-    document.querySelector("#group_created").insertAdjacentHTML("beforeend", html);
-  }
+  return response;
 }
 
 async function isUserGroup(groupName) {
@@ -87,8 +82,6 @@ async function isUserGroup(groupName) {
   return false;
 }
 
-
-
 async function createInviteCode() { 
   const pin = (Math.floor(Math.random() * 10000000) + 10000000).toString().substring(1);
   if (!await doesCodeExist(pin)) {
@@ -100,7 +93,6 @@ async function createInviteCode() {
 }
 
 async function doesCodeExist(inviteCode) {
-
   const response = await fetch(`${endpoint}/inviteCodes/${inviteCode}.json`);
   const data = await response.json();
   
