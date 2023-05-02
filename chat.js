@@ -7,6 +7,7 @@ const endpoint =
 
 const time = new Date().toISOString();
 const user = localStorage.getItem("userName");
+let searchChatArr = [];
 
 async function main() {
   await updateChatGrid();
@@ -14,6 +15,8 @@ async function main() {
   createHtmlChat();
   setEventListeners();
   setInterval(updateChat, 1000);
+  insertSearchInput();
+  matchSearchInput();
 }
 
 async function getData(url) {
@@ -40,10 +43,12 @@ function setEventListeners() {
 
 function prepareData(dataObject) {
   const chatArr = [];
+  searchChatArr = [];
   for (const key in dataObject) {
     const chat = dataObject[key];
     chat.id = key;
     chatArr.push(chat);
+    searchChatArr.push(chat);
   }
   return chatArr;
 }
@@ -137,4 +142,37 @@ function updateChat() {
 function clearInput() {
   document.querySelector("#chat_input").value = "";
   document.querySelector("#chat_input").focus();
+}
+
+function insertSearchInput() {
+  const html = /*html*/ `
+    <input type="search" id="input_search" placeholder="search after text message" >
+  `;
+  document
+    .querySelector(".search_chat_container")
+    .insertAdjacentHTML("beforeend", html);
+}
+
+function matchSearchInput() {
+  const searchInput = document.querySelector("#input_search");
+  searchInput.addEventListener("input", () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const matchingChats = searchChatArr.filter((chat) =>
+      chat.text.toLowerCase().includes(searchTerm)
+    );
+    showSearchChat(matchingChats);
+  });
+}
+
+function showSearchChat(searchChatArr) {
+  const chatContainer = document.querySelector(".search_chat");
+  chatContainer.innerHTML = "";
+  if (document.querySelector("#input_search").value.length > 0) {
+    for (const chat in searchChatArr) {
+      const html = /*html*/ `
+        <div class="chat_output">${searchChatArr[chat].text} <span>${searchChatArr[chat].time}</span> 
+      `;
+      chatContainer.insertAdjacentHTML("afterbegin", html);
+    }
+  }
 }
