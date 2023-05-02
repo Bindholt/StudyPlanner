@@ -7,6 +7,7 @@ const endpoint =
 
 const time = new Date().toISOString();
 const user = localStorage.getItem("userName");
+const group = localStorage.getItem("groupName");
 let searchChatArr = [];
 
 async function main() {
@@ -54,7 +55,7 @@ function prepareData(dataObject) {
 }
 
 async function updateChatGrid() {
-  const chats = await getData(`${endpoint}/chat.json`);
+  const chats = await getData(`${endpoint}/chat/${group}.json`);
   showChats(chats);
 }
 
@@ -76,19 +77,21 @@ function showSingleChat(chat) {
 }
 
 async function createChat(text, time, userName) {
-  const newChat = { text, time, userName };
-  const chatAsJson = JSON.stringify(newChat);
+  if (text.length > 0) {
+    const newChat = { text, time, userName };
+    const chatAsJson = JSON.stringify(newChat);
 
-  const res = await fetch(`${endpoint}/chat.json`, {
-    method: "POST",
-    body: chatAsJson,
-  });
-  const data = await res.json();
-  return data;
+    const res = await fetch(`${endpoint}/chat/${group}.json`, {
+      method: "POST",
+      body: chatAsJson,
+    });
+    const data = await res.json();
+    return data;
+  }
 }
 
 async function deletePost(id) {
-  const url = `${endpoint}/chat/${id}.json`;
+  const url = `${endpoint}/chat/${group}/${id}.json`;
   const res = await fetch(url, { method: "DELETE" });
   console.log(res);
 
@@ -99,7 +102,7 @@ async function deletePost(id) {
 }
 
 async function checkChatAge() {
-  const chats = await getData(`${endpoint}/chat.json`);
+  const chats = await getData(`${endpoint}/chat/${group}.json`);
 
   for (const chat of chats) {
     const currentTime = Date.now();
@@ -133,7 +136,7 @@ function EnterSubmitEvent(event) {
 }
 
 function updateChat() {
-  getData(`${endpoint}/chat.json`).then(function (chats) {
+  getData(`${endpoint}/chat/${group}.json`).then(function (chats) {
     document.querySelector(".chat_container").innerHTML = "";
     showChats(chats);
   });
