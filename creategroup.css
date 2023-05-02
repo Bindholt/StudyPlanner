@@ -4,7 +4,7 @@ h1 {
     text-align: center;
 }
 
-#createGroup {
+#create_group {
     display: grid;
     position: absolute;
     width: 20%;
