@@ -25,6 +25,7 @@ async function createGroup(event) {
     await postGroup(userData);
     await postInviteCode(userData);
   }
+  
 }
 
 async function postInviteCode(userData) {
@@ -51,6 +52,9 @@ async function postGroup(userData) {
 
   if (response.ok) {
     console.log("Det gået igennem");
+    goToMainMain();
+    
+
 
     const html = /*html*/ `
 <p>Group Created</p>
@@ -83,15 +87,17 @@ async function createInviteCode() {
 }
 
 async function doesCodeExist(inviteCode) {
-  console.log("test1")
 
   const response = await fetch(`${endpoint}/inviteCodes/${inviteCode}.json`);
   const data = await response.json();
-  console.log("Test2")
+  
   if (data !== null) {
-    console.log("Test3")
+
     return true;
   }
-  console.log("Test4")
   return false;
+}
+
+function goToMainMain() {
+  window.location = "/mainmain.html";
 }
