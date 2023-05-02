@@ -2,10 +2,29 @@ a:link {
   text-decoration: none;
 }
 
-li > a {
-  color: black;
-}
-
 .kursiv {
   font-style: italic;
+}
+
+.redirect {
+  height: 2em;
+  width: auto;
+  font-size: 16px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  background-color: #299c46;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: solid 2px black;
+}
+
+.redirect:hover {
+  background-color: #206a30;
+}
+
+.grid_container {
+  display:grid;
+  grid-template-columns: 20em 20em;
+
 }
