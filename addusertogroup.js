@@ -20,8 +20,14 @@ async function addUserInG(event) {
 
   const amount = await findAmountOfGroupMembers(groupName);
 
-  await insertMemberInGroup(amount, groupName);
-  await insertGroupNameInMember(groupName);
+  const memberResponse = await insertMemberInGroup(amount, groupName);
+  const groupResponse = await insertGroupNameInMember(groupName);
+
+  if (memberResponse.ok && groupResponse.ok) {
+    goToMainMain();
+  } else {
+    console.log("Error something went wrong");
+  }
 }
 
 async function insertMemberInGroup(amount, groupName) {
@@ -36,9 +42,23 @@ async function insertMemberInGroup(amount, groupName) {
         method: "PATCH",
         body: postAsJson,
       });
-      if (response.ok) {
-        console.log("Members igennem");
-      }
+      
+      return response;
+}
+
+async function insertGroupNameInMember(groupName) {
+  const userData = {
+    groupName,
+  };
+
+  const postAsJson = JSON.stringify(userData);
+
+  const response = await fetch(`${endpoint}/users/${user}.json`, {
+    method: "PATCH",
+    body: postAsJson,
+  });
+
+  return response;
 }
 
 async function findGroupName(inviteCode) {
@@ -70,15 +90,6 @@ function showErrorM() {
     console.log("Error");
 }
 
-async function insertGroupNameInMember(groupName) {
-  const userData = {
-    groupName
-  };
-
-  const postAsJson = JSON.stringify(userData);
-
-  const members = await fetch(`${endpoint}/users/${user}.json`, {
-        method: "PATCH",
-        body: postAsJson,
-      });
+function goToMainMain() {
+  window.location = "/mainmain.html";
 }
