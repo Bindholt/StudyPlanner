@@ -20,11 +20,29 @@ function setEventListener() {
 }
 
 async function leaveGroup() {
-    const groupDelete = await fetch(`${endpoint}/group/${group}/members/${user}.json`, {
+    const groupResponse = await deleteGroup();
+
+    const userResponse = await deleteGroupFromUser();
+
+    if (groupResponse.ok && userResponse.ok) {
+        window.location = "/mainmain.html";
+    } else {
+        console.log("something went horribly wrong");
+    }
+}
+
+async function deleteGroupFromUser() {
+    const response = await fetch(`${endpoint}/users/${user}/groupName.json`, {
         method: "DELETE",
     });
 
-    const userDelete = await fetch(`${endpoint}/users/${user}/groupName.json`, {
+    return response;
+}
+
+async function deleteGroup() {
+    const response = await fetch(`${endpoint}/group/${group}/members/${user}.json`, {
         method: "DELETE",
     });
+
+    return response;
 }
