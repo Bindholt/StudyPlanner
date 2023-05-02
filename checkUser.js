@@ -33,3 +33,19 @@ async function getStudyGroup(userName) {
     localStorage.setItem("groupName", groupName);
     return groupName;
 }
+
+function groupMustBeSet(redirect) {
+    const groupName = localStorage.getItem("groupName");
+    if(!groupName || groupName.length <= 0) {
+        window.location = redirect;
+        return;
+    } 
+}
+
+function groupMustBeSet(redirect) {
+    const groupName = localStorage.getItem("groupName");
+    if(groupName.length > 0) {
+        window.location = redirect;
+        return;
+    } 
+}
