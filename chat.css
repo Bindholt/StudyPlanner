@@ -2,7 +2,9 @@
 .chat_container {
   height: 800px;
   overflow-y: scroll;
+  color:black;
 }
+
 
 /* Style for the chat message */
 .chat_message {
