@@ -11,13 +11,14 @@ const group = localStorage.getItem("groupName");
 let searchChatArr = [];
 
 async function main() {
-  await updateChatGrid();
+  updateChat();
   checkChatAge();
   createHtmlChat();
   setEventListeners();
-  setInterval(updateChat, 1000);
   insertSearchInput();
   matchSearchInput();
+
+  setInterval(updateChat, 1000);
 }
 
 async function getData(url) {
@@ -52,11 +53,6 @@ function prepareData(dataObject) {
     searchChatArr.push(chat);
   }
   return chatArr;
-}
-
-async function updateChatGrid() {
-  const chats = await getData(`${endpoint}/chat/${group}.json`);
-  showChats(chats);
 }
 
 function showChats(data) {
@@ -96,8 +92,7 @@ async function deletePost(id) {
   console.log(res);
 
   if (res.ok) {
-    console.log("Post succesfully Deleted in Firebase");
-    updateChatGrid();
+    console.log("Post successfully Deleted in Firebase");
   }
 }
 
@@ -135,11 +130,10 @@ function EnterSubmitEvent(event) {
   clearInput();
 }
 
-function updateChat() {
-  getData(`${endpoint}/chat/${group}.json`).then(function (chats) {
-    document.querySelector(".chat_container").innerHTML = "";
-    showChats(chats);
-  });
+async function updateChat() {
+  const chats = await getData(`${endpoint}/chat/${group}.json`);
+  document.querySelector(".chat_container").innerHTML = "";
+  showChats(chats);
 }
 
 function clearInput() {
