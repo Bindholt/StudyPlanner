@@ -1,33 +1,35 @@
-a:link {
-  text-decoration: none;
-}
-
-.kursiv {
-  font-style: italic;
-}
-
 h1 {
   width: 100%;
   text-align: center;
 }
 
-#change_user {
-  width: 10em;
-  font-size: 15px;
-  background-color: rgb(208, 44, 44);
+.logout {
   position: absolute;
   top:1%;
   right: 1%
 }
 
+#user_name {
+  font-weight: bold;
+  font-size: 1.25em;
+  padding-right: 1em;
+
+}
+#change_user {
+  width: 10em;
+  font-size: 15px;
+  background-color: rgb(208, 44, 44);
+  padding: 3px;
+}
+
 .redirect {
   height: 1.5em;
   width: auto;
+  margin-bottom: 5em;
   font-size: 25px;
-  border: none;
+  font-weight: bold;
   border-radius: 5px;
   background-color: #299c46;
-  color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: solid 2px black;
