@@ -27,3 +27,8 @@ form fieldset {
     display: none;
     color:red;
 }
+
+.have_user {
+    margin-top: 10px;
+    text-align: center;
+}
