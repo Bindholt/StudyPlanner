@@ -1,10 +1,14 @@
 "use strict";
-
+import { fetchBaas } from "./rest-services.js";
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/";
 
 window.addEventListener("load", main);
 
 function main() {
+    setEventListeners();
+}
+
+function setEventListeners() {
     document.querySelector("#sign_in").addEventListener("submit", login);
     document.querySelector("#btn_go_to_create").addEventListener("mouseup", goToCreate);
 }
@@ -13,22 +17,23 @@ async function login(event) {
     event.preventDefault();
     const userName = document.querySelector("#user_name").value;
 
-    const response = await fetch(`${endpoint}/users/${userName}.json`);
+    const getUserURL = `users/${userName}.json`;
+    const userResponse = await fetchBaas(getUserURL, "GET");
 
-    const userData = await response.json();
+    if (userResponse.ok) {
+        const userData = await userResponse.json();
 
-    if (await userData) {
-        if(response.ok && await validPin(userData.pin)) { 
-            await setLocalStorage(userData);
-            window.location = "/main.html";
+        if (await userData) {
+            if(response.ok && await validPin(userData.pin)) { 
+                await setLocalStorage(userData);
+                window.location = "/main.html";
+            } else {
+                showErrorMsgPin();
+            }
         } else {
-            showErrorMsgPin();
+            showErrorMsgUser();
         }
-    } else {
-        showErrorMsgUser();
     }
-    
-    
 }
 
 async function validPin(fetchedPin) {
