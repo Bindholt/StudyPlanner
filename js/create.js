@@ -1,14 +1,19 @@
 "use strict";
+import { fetchBaas } from "./rest-services.js";
 
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 
 window.addEventListener("load", main);
 
 function main(event) {
+    setEventListeners();
+    createRandomPins();
+}
+
+function setEventListeners() {
     document.querySelector("#sign_up").addEventListener("submit", createUser);
     document.querySelector("#btn_refresh_pins").addEventListener("mouseup", createRandomPins);
     document.querySelector("#btn_go_to_login").addEventListener("mouseup", goToLogin);
-    createRandomPins();
 }
 
 async function createUser(event) {
@@ -25,35 +30,31 @@ async function createUser(event) {
             pin: event.target["pin"].value,
             groupName: "",
         }
-        await postUser(userData);     
-
+        const putUserURL = `users/${userData.userName}.json`
+        
+        const userResponse = await fetchBaas(putUserURL, "PUT", userData);
+        
+        if(userResponse.ok) {
+            window.location = "/login.html";
+        }  
     } else {
         showErrorMsg();
     }
 }
 
-
-async function postUser(userData) {
-    const postAsJson = JSON.stringify(userData);
-
-    const response = await fetch(`${endpoint}/users/${userData.userName}.json`, {
-        method: "PUT",
-        body: postAsJson
-    });
-
-    if (response.ok) {
-        window.location = "/login.html";
-    }
-}
-
 async function isUserExist(userName) {
-    const response = await fetch(`${endpoint}/users/${userName}.json`);
-    const data = await response.json();
+    const getUserURL = `users/${userName}.json`;
 
-    if(data !== null) {
-        return true;
-    } 
-    return false;
+    const userResponse = await fetchBaas(getUserURL, "GET");
+
+    if(userResponse.ok) {
+        const data = await userResponse.json();
+
+        if(data !== null) {
+            return true;
+        } 
+        return false;
+    }
 }
 
 function createRandomPins() {
