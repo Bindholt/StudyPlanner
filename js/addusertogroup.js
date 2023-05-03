@@ -8,10 +8,9 @@ const user = localStorage.getItem("userName");
 function main() {
   document.querySelector("#add_user_to_group").addEventListener("submit", addUserInG);
 }
-let test;
+
 async function addUserInG(event) {
   event.preventDefault();
-
   const groupNameResponse = await getGroupNameByInviteCode(event.target["invite_code"].value);
   
   if(groupNameResponse.ok) {
