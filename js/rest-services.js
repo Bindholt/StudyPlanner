@@ -2,32 +2,18 @@
 
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 
-async function getGroupNameByInviteCode(inviteCode) {
-    const response = await fetch(`${endpoint}/inviteCodes/${inviteCode}.json`);
-
-    return response;
-}
-
-async function patchMemberIntoGroup(userData, groupName) {
-    const postAsJson = JSON.stringify(userData);
+async function fetchBaas(url, method, data) {
+    const options = {
+        method,
+    }
     
-    const response = await fetch(`${endpoint}/group/${groupName}/members.json`, {
-        method: "PATCH",
-        body: postAsJson,
-    });
-    
-    return response;
-}
+    if (data) {
+        options.body = JSON.stringify(data);
+    }
 
-async function patchGroupNameIntoMember(userData, user) {
-    const postAsJson = JSON.stringify(userData);
-
-    const response = await fetch(`${endpoint}/users/${user}.json`, {
-        method: "PATCH",
-        body: postAsJson,
-    });
+    const response = await fetch(endpoint + url, options);
 
     return response;  
 }
 
-export {getGroupNameByInviteCode, patchMemberIntoGroup, patchGroupNameIntoMember};
+export {fetchBaas};

@@ -1,5 +1,5 @@
 "use strict";
-import { getGroupNameByInviteCode, patchMemberIntoGroup, patchGroupNameIntoMember } from "./rest-services.js";
+import { fetchBaas } from "./rest-services.js";
 
 window.addEventListener("load", main)
 
@@ -11,7 +11,10 @@ function main() {
 
 async function addUserInG(event) {
   event.preventDefault();
-  const groupNameResponse = await getGroupNameByInviteCode(event.target["invite_code"].value);
+
+  const inviteCode = event.target["invite_code"].value;
+  const getGroupByInviteCodeURL = `inviteCodes/${inviteCode}.json`;
+  const groupNameResponse = await fetchBaas(getGroupByInviteCodeURL, "GET");
   
   if(groupNameResponse.ok) {
 
@@ -20,12 +23,14 @@ async function addUserInG(event) {
       const memberData = {
         [user]: user
       }
-      const memberResponse = await patchMemberIntoGroup(memberData, group.groupName);
+      const patchMemberIntoGroupURL = `group/${group.groupName}/members.json`;
+      const memberResponse = await fetchBaas(patchMemberIntoGroupURL, "PATCH", memberData);
 
       const groupData = {
         groupName: group.groupName
       }
-      const groupResponse = await patchGroupNameIntoMember(groupData, user);
+      const patchGroupNameIntoMemberURL = `users/${user}.json`;
+      const groupResponse = await fetchBaas(patchGroupNameIntoMemberURL, "PATCH", groupData);
     
       if (memberResponse.ok && groupResponse.ok) {
         goToMain();

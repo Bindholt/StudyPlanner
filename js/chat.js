@@ -14,9 +14,8 @@ async function main() {
   updateChat();
   checkChatAge();
   createHtmlChat();
-  setEventListeners();
   insertSearchInput();
-
+  setEventListeners();
   setInterval(updateChat, 1000);
 }
 
