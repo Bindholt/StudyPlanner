@@ -1,6 +1,5 @@
 "use strict";
-
-const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
+import { fetchBaas } from "./rest-services.js";
 
 window.addEventListener("load", main);
 const user = localStorage.getItem("userName");
@@ -20,29 +19,15 @@ function setEventListener() {
 }
 
 async function leaveGroup() {
-    const groupResponse = await deleteGroup();
+    const deleteUserFromGroupURL = `group/${group}/members/${user}.json`;
+    const fromGroupResponse = await fetchBaas(deleteUserFromGroupURL, "DELETE");
 
-    const userResponse = await deleteGroupFromUser();
+    const deleteGroupFromUserURL = `users/${user}/groupName.json`;
+    const fromUserResponse = await fetchBaas(deleteGroupFromUserURL, "DELETE");
 
-    if (groupResponse.ok && userResponse.ok) {
+    if (fromGroupResponse.ok && fromUserResponse.ok) {
         window.location = "/main.html";
     } else {
         console.log("something went horribly wrong");
     }
-}
-
-async function deleteGroupFromUser() {
-    const response = await fetch(`${endpoint}/users/${user}/groupName.json`, {
-        method: "DELETE",
-    });
-
-    return response;
-}
-
-async function deleteGroup() {
-    const response = await fetch(`${endpoint}/group/${group}/members/${user}.json`, {
-        method: "DELETE",
-    });
-
-    return response;
 }
