@@ -1,5 +1,4 @@
 "use strict";
-
 import { fetchBaas } from "./rest-services.js";
 
 window.addEventListener("load", main);
@@ -100,8 +99,6 @@ function sortMembers(event) {
   for (const member in memberArray) {
     setMemberHTML(memberArray[member]);
   }
-
-
 }
 
 function setMemberHTML(member) {  

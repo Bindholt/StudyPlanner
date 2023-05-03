@@ -1,5 +1,5 @@
 "use strict";
-
+import { fetchBaas } from "./rest-services.js";
 window.addEventListener("load", main);
 
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
@@ -93,8 +93,6 @@ async function incrementMonth() {
     const monthlyEvents = await getMonthlyEvents();
     const daysArray = getDaysOfMonth();
     setDaysHTML(daysArray, (monthlyEvents === null ? [] : monthlyEvents))
-
-    //todo: tjekke efter studiedates på datoer
 }
 
 async function decrementMonth() {
@@ -109,17 +107,22 @@ async function decrementMonth() {
     const monthlyEvents = await getMonthlyEvents();
     const daysArray = getDaysOfMonth();
     setDaysHTML(daysArray, (monthlyEvents === null ? [] : monthlyEvents))
-    //todo: tjekke efter studiedates på datoer
 }
 
 async function dialogOpen(day) {
     resetDialog();
     document.querySelector("#date_header").innerHTML = `${day}/${month}/${year}`;
-    const dailyEvents = await getDailyEvents(day);
-    if (dailyEvents) {
-        setExistingDateHTML(dailyEvents);
+
+    const getDailyEventsURL = `events/${groupName}/${year}/${month}/${day}.json`;
+    const eventsResponse = await fetchBaas(getDailyEventsURL, "GET");
+
+    if(eventsResponse.ok) {
+        const events = await eventsResponse.json();
+        if (events) {
+            setExistingDateHTML(events);
+        }
+        document.querySelector("#dialog_day").showModal();
     }
-    document.querySelector("#dialog_day").showModal();
 }
 
 function setDialogHTML() {
@@ -167,9 +170,11 @@ function setUntilDateSelectHTML() {
 }
 
 async function getMonthlyEvents() {
-    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}.json`);
-    const monthlyEvents = await response.json()
-    if (response.ok) {
+    const getMonthlyEventsURL = `events/${groupName}/${year}/${month}.json`;
+    const eventsResponse = await fetchBaas(getMonthlyEventsURL, "GET");
+
+    if (eventsResponse.ok) {
+        const monthlyEvents = await eventsResponse.json();
         return monthlyEvents;
     } else {
         console.log("Somethings wrong. CALL IT!");
@@ -177,17 +182,7 @@ async function getMonthlyEvents() {
     }
 }
 
-async function getDailyEvents(day) {
-    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}.json`);
-    const dailyEvent = await response.json()
-    if (response.ok) {
-        return dailyEvent;
-    } else {
-        return false;
-    }
-}
-
-async function setExistingDateHTML(dailyEvents) {
+function setExistingDateHTML(dailyEvents) {
     for (let event in dailyEvents) {
         document.querySelector("#existing_dates").style.display = "grid";
         const myHTML = /* html */ `
