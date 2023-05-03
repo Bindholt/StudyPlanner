@@ -9,14 +9,25 @@ async function getGroupNameByInviteCode(inviteCode) {
 }
 
 async function patchMemberIntoGroup(userData, groupName) {
-      const postAsJson = JSON.stringify(userData);
-      
-      const response = await fetch(`${endpoint}/group/${groupName}/members.json`, {
+    const postAsJson = JSON.stringify(userData);
+    
+    const response = await fetch(`${endpoint}/group/${groupName}/members.json`, {
         method: "PATCH",
         body: postAsJson,
-      });
-      
-      return response;
+    });
+    
+    return response;
 }
 
-export {getGroupNameByInviteCode, patchMemberIntoGroup};
+async function patchGroupNameIntoMember(userData, user) {
+    const postAsJson = JSON.stringify(userData);
+
+    const response = await fetch(`${endpoint}/users/${user}.json`, {
+        method: "PATCH",
+        body: postAsJson,
+    });
+
+    return response;  
+}
+
+export {getGroupNameByInviteCode, patchMemberIntoGroup, patchGroupNameIntoMember};
