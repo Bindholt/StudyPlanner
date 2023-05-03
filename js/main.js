@@ -3,7 +3,6 @@
 import { fetchBaas } from "./rest-services.js";
 
 window.addEventListener("load", main);
-const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const group = localStorage.getItem("groupName");
 let memberArray = [];
 
