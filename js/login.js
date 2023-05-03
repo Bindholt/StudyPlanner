@@ -1,6 +1,5 @@
 "use strict";
 import { fetchBaas } from "./rest-services.js";
-const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/";
 
 window.addEventListener("load", main);
 
@@ -24,7 +23,7 @@ async function login(event) {
         const userData = await userResponse.json();
 
         if (await userData) {
-            if(response.ok && await validPin(userData.pin)) { 
+            if(await validPin(userData.pin)) { 
                 await setLocalStorage(userData);
                 window.location = "/main.html";
             } else {

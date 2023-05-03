@@ -1,5 +1,7 @@
 "use strict";
 
+import { fetchBaas } from "./rest-services.js";
+
 window.addEventListener("load", main);
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const group = localStorage.getItem("groupName");
@@ -45,14 +47,17 @@ function setEventListeners() {
 }
 
 async function handleGroupHTML() {
-  const groupResponse = await getGroupInformation();
+  const getGroupURL = `group/${group}.json`;
+  const groupResponse = await fetchBaas(getGroupURL, "GET");
 
   if (groupResponse.ok) {
     const groupData = await groupResponse.json();
     setGroupHTML(groupData);
     
     for (const member in groupData.members) {
-      const memberResponse = await getMembersInformation(groupData.members[member]);
+      const getMemberURL = `users/${member}.json`;
+      const memberResponse = await fetchBaas(getMemberURL, "GET");
+
       if (memberResponse.ok) {
         const memberData = await memberResponse.json();
         memberArray.push(memberData);
@@ -109,18 +114,6 @@ function setMemberHTML(member) {
     </div>  
   `
   document.querySelector("#members_container").insertAdjacentHTML("beforeend", memberHTML)
-}
-
-async function getGroupInformation() {
-  const response = await fetch(`${endpoint}/group/${group}.json`);
-
-  return response;
-}
-
-async function getMembersInformation(member) {
-  const response = await fetch(`${endpoint}/users/${member}.json`);
-
-  return response;
 }
 
 function logout() {
