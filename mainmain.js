@@ -3,6 +3,7 @@
 window.addEventListener("load", main);
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const group = localStorage.getItem("groupName");
+const memberArray = [];
 
 async function main() {
   setEventListeners();
@@ -26,24 +27,51 @@ async function handleGroupHTML() {
 
   if (groupResponse.ok) {
     const groupData = await groupResponse.json();
+    
     test = groupData;
     setGroupHTML(groupData);
+    
+    for (const member in groupData.members) {
+      const memberResponse = await getMembersInformation(groupData.members[member]);
+      if (memberResponse.ok) {
+        const memberData = await memberResponse.json();
+        memberArray.push(memberData);
+        setMemberHTML(memberData);
+      }
+    }
   }
 }
 
 function setGroupHTML(groupData) {
   const groupHTML = /* html */ `
-      <div>Group: ${groupData.groupName}</div>
-      <div>Invite code: ${groupData.inviteCode}</div>
-      <section>
+      <h2>Group: ${groupData.groupName}</h2>
+      <h3>Invite code: ${groupData.inviteCode}</h3>
+      <section id="members_container">
         
       </section>
   `
   document.querySelector(".group_container").insertAdjacentHTML("afterbegin", groupHTML);
 }
 
+function setMemberHTML(member) {  
+  const memberHTML = /* html */ `
+    <div class="member_container">
+      <div>${member.fullName}</div>
+      <div>${member.phone}</div>
+      <div>${member.email}</div>
+    </div>  
+  `
+  document.querySelector("#members_container").insertAdjacentHTML("beforeend", memberHTML)
+}
+
 async function getGroupInformation() {
   const response = await fetch(`${endpoint}/group/${group}.json`);
+
+  return response;
+}
+
+async function getMembersInformation(member) {
+  const response = await fetch(`${endpoint}/users/${member}.json`);
 
   return response;
 }

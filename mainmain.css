@@ -23,9 +23,9 @@ h1 {
 .redirect {
   height: 1.5em;
   width: auto;
-  font-size: 20px;
+  font-size: 25px;
   border: none;
-  border-radius: 0 5px 5px 0;
+  border-radius: 5px;
   background-color: #299c46;
   color: #fff;
   cursor: pointer;
@@ -41,14 +41,21 @@ h1 {
 
 .grid_container {
   display:grid;
-  grid-template-columns: 20em 20em;
-  gap: 10em;
+  grid-template-columns: 25% 25%;
+  gap: 10%;
 }
 
 .group_container {
   position: absolute;
-  top:30%;
-  right:15%;
+  top:10%;
+  right:2%;
   border: 3px solid black;
-  padding:10px;
+  padding:0 10px 10px 10px;
+}
+
+.member_container {
+  border: 1px solid black;
+  padding:5px;
+  margin-bottom: 2px;
+  font-size: 1em;
 }
