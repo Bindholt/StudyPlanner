@@ -38,8 +38,12 @@ async function validPin(fetchedPin) {
 }
 
 async function setLocalStorage(userData) {
-    localStorage.setItem("userName", userData.userName);
-    localStorage.setItem("groupName", userData.groupName);   
+    if(userData.userName) {
+        localStorage.setItem("userName", userData.userName);
+    }
+    if(userData.groupName) {
+        localStorage.setItem("groupName", userData.groupName);
+    }
 }
 
 function goToCreate() {

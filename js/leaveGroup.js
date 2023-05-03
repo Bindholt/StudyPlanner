@@ -25,7 +25,7 @@ async function leaveGroup() {
     const userResponse = await deleteGroupFromUser();
 
     if (groupResponse.ok && userResponse.ok) {
-        window.location = "/mainmain.html";
+        window.location = "/main.html";
     } else {
         console.log("something went horribly wrong");
     }

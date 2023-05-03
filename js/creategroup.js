@@ -29,7 +29,7 @@ async function createGroup(event) {
     const memberResponse = await insertGroupNameInMember(event.target["group_name"].value)
 
     if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
-      goToMainMain();
+      goToMain();
     } else {
       console.log("There was an error");
     }
@@ -106,6 +106,6 @@ async function doesCodeExist(inviteCode) {
   return false;
 }
 
-function goToMainMain() {
-  window.location = "/mainmain.html";
+function goToMain() {
+  window.location = "/main.html";
 }

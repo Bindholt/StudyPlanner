@@ -10,6 +10,7 @@ async function main() {
   setEventListeners();
   
   if(group && group.length > 0) {
+    console.log("here");
     handleGroupHTML();
     hasGroupHideLinks();
   } else {
@@ -26,6 +27,8 @@ function noGroupHideLinks() {
   document.querySelector("#calendar").style.display = "none";
   document.querySelector("#chat").style.display = "none";
   document.querySelector("#leave_group").style.display = "none";
+  document.querySelector(".group_container").style.display = "none";
+  
 }
 
 function setUserNameHTML() {
