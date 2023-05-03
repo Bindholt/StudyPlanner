@@ -1,88 +1,43 @@
 "use strict";
 
+import { fetchBaas } from "./rest-services";
+
 window.addEventListener("load", main);
 
-// const endpoint = "https://test-studygroup-default-rtdb.europe-west1.firebasedatabase.app/";
-const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
 const user = localStorage.getItem("userName");  
 
 function main(event) {
-  console.log("Hello");
-
   document.querySelector("#create_group").addEventListener("submit", createGroup);
-
 }
 
 async function createGroup(event) {
   event.preventDefault(); 
   const inviteCode = await createInviteCode();
 
-  if (!(await isUserGroup(event.target["group_name"].value))) {
-    const userData = {
-      groupName: event.target["group_name"].value,
-      inviteCode: inviteCode,
-      members: {[user]: user}
-    };
-
-    const groupResponse = await postGroup(userData);
-    const codeResponse = await postInviteCode(userData);
-    const memberResponse = await insertGroupNameInMember(event.target["group_name"].value)
-
-    if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
-      goToMain();
-    } else {
-      console.log("There was an error");
-    }
-  }
-  
-}
-
-async function insertGroupNameInMember(groupName) {
   const userData = {
-    groupName
+    groupName: event.target["group_name"].value,
+    inviteCode: inviteCode,
+    members: {[user]: user}
   };
 
-  const postAsJson = JSON.stringify(userData);
+  const putGroupURL = `group/${userData.groupName}.json`;
+  const groupResponse = await fetchBaas(putGroupURL, "PUT", userData);
 
-  const response = await fetch(`${endpoint}/users/${user}.json`, {
-    method: "PATCH",
-    body: postAsJson,
-  });
+  const putInviteCodeURL = `inviteCodes/${userData.inviteCode}.json`;
+  const codeResponse = await fetchBaas(putInviteCodeURL, "PUT", userData);
 
-  return response;
-  
-}
+  const groupNameData = {
+    groupName: event.target["group_name"].value
+  };
 
-async function postInviteCode(userData) {
-  const postAsJson = JSON.stringify(userData);
+  const patchGroupNameInUserURL = `users/${user}.json`;
+  const memberResponse = await fetchBaas(patchGroupNameInUserURL, "PATCH", groupNameData)
 
-  const response = await fetch(`${endpoint}/inviteCodes/${userData.inviteCode}.json`, {
-    method: "PUT",
-    body: postAsJson,
-  }); 
-
-  return response;
-}
-
-async function postGroup(userData) {
-  const postAsJson = JSON.stringify(userData);
-
-  const response = await fetch(`${endpoint}/group/${userData.groupName}.json`, {
-    method: "PUT",
-    body: postAsJson,
-  });
-
-  return response;
-}
-
-async function isUserGroup(groupName) {
-  const response = await fetch(`${endpoint}/users/${groupName}.json`);
-  const data = await response.json();
-
-  if (data !== null) {
-    return true;
+  if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
+    goToMain();
+  } else {
+    console.log("There was an error");
   }
-  return false;
 }
 
 async function createInviteCode() { 
@@ -96,14 +51,18 @@ async function createInviteCode() {
 }
 
 async function doesCodeExist(inviteCode) {
-  const response = await fetch(`${endpoint}/inviteCodes/${inviteCode}.json`);
-  const data = await response.json();
-  
-  if (data !== null) {
+  const getInviteCodeURL = `inviteCodes/${inviteCode}.json`;
+  const codeResponse = await fetchBaas(getInviteCodeURL, "GET");
 
-    return true;
+  if(codeResponse.ok) {
+    const data = await codeResponse.json();
+  
+    if (data !== null) {
+  
+      return true;
+    }
+    return false;
   }
-  return false;
 }
 
 function goToMain() {
