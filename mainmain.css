@@ -2,10 +2,53 @@ a:link {
   text-decoration: none;
 }
 
-li > a {
-  color: black;
-}
-
 .kursiv {
   font-style: italic;
+}
+
+h1 {
+  width: 100%;
+  text-align: center;
+}
+
+#change_user {
+  width: 10em;
+  font-size: 15px;
+  background-color: rgb(208, 44, 44);
+  position: absolute;
+  top:1%;
+  right: 1%
+}
+
+.redirect {
+  height: 1.5em;
+  width: auto;
+  font-size: 20px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  background-color: #299c46;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: solid 2px black;
+  text-align: center;
+  
+}
+
+.redirect:hover {
+  background-color: #206a30;
+}
+
+.grid_container {
+  display:grid;
+  grid-template-columns: 20em 20em;
+  gap: 10em;
+}
+
+.group_container {
+  position: absolute;
+  top:30%;
+  right:15%;
+  border: 3px solid black;
+  padding:10px;
 }
