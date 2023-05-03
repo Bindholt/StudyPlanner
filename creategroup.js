@@ -44,10 +44,13 @@ async function insertGroupNameInMember(groupName) {
 
   const postAsJson = JSON.stringify(userData);
 
-  const members = await fetch(`${endpoint}/users/${user}.json`, {
-        method: "PATCH",
-        body: postAsJson,
-      });
+  const response = await fetch(`${endpoint}/users/${user}.json`, {
+    method: "PATCH",
+    body: postAsJson,
+  });
+
+  return response;
+  
 }
 
 async function postInviteCode(userData) {
