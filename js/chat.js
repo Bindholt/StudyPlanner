@@ -16,7 +16,6 @@ async function main() {
   createHtmlChat();
   setEventListeners();
   insertSearchInput();
-  matchSearchInput();
 
   setInterval(updateChat, 1000);
 }
@@ -41,6 +40,14 @@ function setEventListeners() {
         EnterSubmitEvent();
       }
     });
+
+  document.querySelector("#input_search").addEventListener("input", () => {
+    const searchTerm = searchInput.value.trim().toLowerCase();
+    const matchingChats = searchChatArr.filter((chat) =>
+      chat.text.toLowerCase().includes(searchTerm)
+    );
+    showSearchChat(matchingChats);
+  });
 }
 
 function prepareData(dataObject) {
@@ -150,16 +157,6 @@ function insertSearchInput() {
     .insertAdjacentHTML("beforeend", html);
 }
 
-function matchSearchInput() {
-  const searchInput = document.querySelector("#input_search");
-  searchInput.addEventListener("input", () => {
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const matchingChats = searchChatArr.filter((chat) =>
-      chat.text.toLowerCase().includes(searchTerm)
-    );
-    showSearchChat(matchingChats);
-  });
-}
 
 function showSearchChat(searchChatArr) {
   const chatContainer = document.querySelector(".search_chat");
