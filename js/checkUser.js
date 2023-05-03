@@ -1,16 +1,20 @@
 "use strict";
+import { fetchBaas } from "./rest-services.js";
 
-window.addEventListener("load", main);
-const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
+function groupMustBeSet(redirect) {
+    const groupName = localStorage.getItem("groupName");
+    if(!groupName || groupName.length <= 0) {
+        window.location = redirect;
+        return;
+    } 
+}
 
-let test;
-async function main() {
-    const userName = checkUser();
-    
-    if(!checkStudyGroup()) {
-        await getStudyGroup(userName);
-    };
-    console.log(await getStudyGroup(userName));
+function groupMustNotBeSet(redirect) {
+    const groupName = localStorage.getItem("groupName");
+    if(groupName.length > 0) {
+        window.location = redirect;
+        return;
+    } 
 }
 
 function checkUser() {
@@ -22,30 +26,16 @@ function checkUser() {
     return userName;
 }
 
-function checkStudyGroup() {
-    const groupName = localStorage.getItem("groupName");
-    return groupName !== null && (groupName.length > 0);
+async function setStudyGroup() {
+    const userName = localStorage.getItem("userName");
+    const getStudyGroupURL = `users/${userName}/groupName.json`;
+    const groupResponse = await fetchBaas(getStudyGroupURL, "GET");
+
+    if(groupResponse.ok) {
+        const groupName = await groupResponse.json();
+
+        (groupName) ? localStorage.setItem("groupName", groupName) : localStorage.setItem("groupName", "");
+    }
 }
 
-async function getStudyGroup(userName) {
-    const response = await fetch(`${endpoint}/users/${userName}/groupName.json`);
-    const groupName = await response.json();
-    localStorage.setItem("groupName", groupName);
-    return groupName;
-}
-
-function groupMustBeSet(redirect) {
-    const groupName = localStorage.getItem("groupName");
-    if(!groupName || groupName.length <= 0) {
-        window.location = redirect;
-        return;
-    } 
-}
-
-function groupMustBeSet(redirect) {
-    const groupName = localStorage.getItem("groupName");
-    if(groupName.length > 0) {
-        window.location = redirect;
-        return;
-    } 
-}
+export {checkUser, setStudyGroup, groupMustBeSet, groupMustNotBeSet}
