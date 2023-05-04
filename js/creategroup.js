@@ -1,5 +1,5 @@
 "use strict";
-import { fetchBaas } from "./rest-services.js";
+import { fetchBaas } from "./restServices.js";
 import {checkUser, setStudyGroup, groupMustNotBeSet} from "./checkUser.js";
 
 window.addEventListener("load", main);

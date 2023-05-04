@@ -1,5 +1,5 @@
 "use strict";
-import { fetchBaas } from "./rest-services.js";
+import { fetchBaas } from "./restServices.js";
 
 window.addEventListener("load", main);
 
