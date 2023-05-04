@@ -2,9 +2,8 @@
 .chat_container {
   height: 800px;
   overflow-y: scroll;
-  color:black;
+  color: black;
 }
-
 
 /* Style for the chat message */
 .chat_message {
@@ -104,6 +103,7 @@
   background-color: #fff;
   padding: 10px;
   margin: 2%;
+  overflow: hidden;
 }
 
 .chat_output:hover {
@@ -131,5 +131,5 @@ span {
 }
 
 .search_chat {
-  color:black;
+  color: black;
 }
