@@ -5,14 +5,14 @@ import {checkUser, setStudyGroup, groupMustNotBeSet} from "./checkUser.js";
 window.addEventListener("load", main);
 
 function main(event) {
-    handleCheckUser();
+    unsetLocalStorage();
     setEventListeners();
     createRandomPins();
 }
 
-function handleCheckUser() {
-    checkUser();
-    setStudyGroup();
+function unsetLocalStorage() {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("groupName");
 }
 
 function setEventListeners() {

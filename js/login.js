@@ -4,7 +4,13 @@ import { fetchBaas } from "./restServices.js";
 window.addEventListener("load", main);
 
 function main() {
+    unsetLocalStorage();
     setEventListeners();
+}
+
+function unsetLocalStorage() {
+    localStorage.removeItem("userName");
+    localStorage.removeItem("groupName");
 }
 
 function setEventListeners() {
