@@ -20,8 +20,8 @@ async function main() {
 }
 
 function handleCheckUser() {
-    checkUser();
-    setStudyGroup();
+  checkUser();
+  setStudyGroup();
 }
 
 

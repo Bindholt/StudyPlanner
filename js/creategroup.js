@@ -7,6 +7,7 @@ window.addEventListener("load", main);
 const user = localStorage.getItem("userName");  
 
 function main(event) {
+  isGroupExist("CaMV");
   handleCheckUser();
   setEventListeners();
 }
@@ -25,31 +26,52 @@ function handleCheckUser() {
 
 async function createGroup(event) {
   event.preventDefault(); 
-  const inviteCode = await createInviteCode();
 
-  const userData = {
-    groupName: event.target["group_name"].value,
-    inviteCode: inviteCode,
-    members: {[user]: user}
-  };
+  if(!await isGroupExist(event.target["group_name"].value)) {
+    const inviteCode = await createInviteCode();
 
-  const putGroupURL = `group/${userData.groupName}.json`;
-  const groupResponse = await fetchBaas(putGroupURL, "PUT", userData);
+    const userData = {
+      groupName: event.target["group_name"].value,
+      inviteCode: inviteCode,
+      members: {[user]: user}
+    };
 
-  const putInviteCodeURL = `inviteCodes/${userData.inviteCode}.json`;
-  const codeResponse = await fetchBaas(putInviteCodeURL, "PUT", userData);
+    const putGroupURL = `group/${userData.groupName}.json`;
+    const groupResponse = await fetchBaas(putGroupURL, "PUT", userData);
 
-  const groupNameData = {
-    groupName: event.target["group_name"].value
-  };
+    const putInviteCodeURL = `inviteCodes/${userData.inviteCode}.json`;
+    const codeResponse = await fetchBaas(putInviteCodeURL, "PUT", userData);
 
-  const patchGroupNameInUserURL = `users/${user}.json`;
-  const memberResponse = await fetchBaas(patchGroupNameInUserURL, "PATCH", groupNameData)
+    const groupNameData = {
+      groupName: event.target["group_name"].value
+    };
 
-  if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
-    goToMain();
+    const patchGroupNameInUserURL = `users/${user}.json`;
+    const memberResponse = await fetchBaas(patchGroupNameInUserURL, "PATCH", groupNameData)
+
+    if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
+      goToMain();
+    } else {
+      console.log("There was an error");
+    }
   } else {
-    console.log("There was an error");
+    showErrorMsg("Group name already exists");
+  }
+}
+
+async function isGroupExist(groupName) {
+  const getGroupURL = `group/${groupName}.json`;
+
+  const groupResponse = await fetchBaas(getGroupURL, "GET");
+
+  if (groupResponse.ok) {
+    const groupData = await groupResponse.json();
+    
+    if(groupData) {
+      return true;
+    }
+    
+    return false;
   }
 }
 
@@ -76,6 +98,10 @@ async function doesCodeExist(inviteCode) {
     }
     return false;
   }
+}
+
+function showErrorMsg(msg) {
+  document.querySelector(".error_msg").innerText = msg;
 }
 
 function goToMain() {
