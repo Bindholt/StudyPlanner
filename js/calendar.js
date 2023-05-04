@@ -231,7 +231,9 @@ function resetDialog() {
 }
 
 async function isEventExist(day, fromTime) {
-    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${fromTime}.json`);
+    const getEventURL = `events/${groupName}/${year}/${month}/${day}/${fromTime}.json`;
+
+    const response = await fetchBaas(getEventURL, "GET");
     const data = await response.json();
 
     if(data !== null) {
@@ -292,13 +294,11 @@ async function updateEvent(event) {
         description: event.target["study_date_description"].value,
     }
 
-    const postAsJson = JSON.stringify(eventData);
-    const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
-        method: "PATCH",
-        body: postAsJson
-    });
+    const patchEventURL = `events/${groupName}/${year}/${month}/${day}/${event.target["event_from"].value}.json`;
 
-    if (response.ok) {
+    const eventResponse = await fetchBaas(patchEventURL, "PATCH", eventData);
+
+    if (eventResponse.ok) {
         window.location = window.location;
     }
 }
@@ -314,15 +314,11 @@ async function postEvent(event) {
             untilTime: event.target["event_until"].value,
             description: event.target["study_date_description"].value,
         }
+        const putEventURL = `events/${eventData.group}/${year}/${month}/${day}/${event.target["event_from"].value}.json`;
 
-        const postAsJson = JSON.stringify(eventData);
-        
-        const response = await fetch(`${endpoint}/events/${eventData.group}/${year}/${month}/${day}/${event.target["event_from"].value}.json`, {
-            method: "PUT",
-            body: postAsJson
-        });
+        const eventResponse = await fetchBaas(putEventURL, "PUT", eventData)
 
-        if (response.ok) {
+        if (eventResponse.ok) {
             window.location = window.location;
         }
     }
@@ -336,11 +332,11 @@ async function deleteEvent(event) {
 
     
     if(confirm(`Er du sikker på at du gerne vil slette aftalen som starter ${time}?`)) {  
-        const response = await fetch(`${endpoint}/events/${groupName}/${year}/${month}/${day}/${time}.json`, {
-            method: "DELETE"
-        });
+        const deleteEventURL = `events/${groupName}/${year}/${month}/${day}/${time}.json`;
 
-        if (response.ok) {
+        const eventResponse = await fetchBaas(deleteEventURL, "DELETE");
+
+        if (eventResponse.ok) {
             window.location = window.location;
         }
     }
