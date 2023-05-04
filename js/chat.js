@@ -1,6 +1,6 @@
 "use strict";
 import { fetchBaas } from "./rest-services.js";
-
+import {checkUser, setStudyGroup, groupMustBeSet} from "./checkUser.js";
 window.addEventListener("load", main);
 
 const time = new Date().toISOString();
@@ -9,12 +9,19 @@ const group = localStorage.getItem("groupName");
 let searchChatArr = [];
 
 async function main() {
+  handleCheckUser();
   updateChat();
   checkChatAge();
   createChatHTML();
   createSearchHTML();
   setEventListeners();
   setInterval(updateChat, 1000);
+}
+
+function handleCheckUser() {
+  checkUser();
+  setStudyGroup();
+  groupMustBeSet("/main.html");
 }
 
 function setEventListeners() {

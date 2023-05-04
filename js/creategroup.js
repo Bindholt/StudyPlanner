@@ -1,14 +1,22 @@
 "use strict";
-
 import { fetchBaas } from "./rest-services.js";
+import {checkUser, setStudyGroup, groupMustNotBeSet} from "./checkUser.js";
 
 window.addEventListener("load", main);
 
 const user = localStorage.getItem("userName");  
 
 function main(event) {
+  handleCheckUser();
   document.querySelector("#create_group").addEventListener("submit", createGroup);
 }
+
+function handleCheckUser() {
+  checkUser();
+  setStudyGroup();
+  groupMustNotBeSet("/main.html");
+}
+
 
 async function createGroup(event) {
   event.preventDefault(); 

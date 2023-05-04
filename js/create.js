@@ -1,11 +1,19 @@
 "use strict";
 import { fetchBaas } from "./rest-services.js";
+import {checkUser, setStudyGroup, groupMustNotBeSet} from "./checkUser.js";
 
 window.addEventListener("load", main);
 
 function main(event) {
+    handleCheckUser();
     setEventListeners();
     createRandomPins();
+}
+
+function handleCheckUser() {
+    checkUser();
+    setStudyGroup();
+    groupMustNotBeSet("/main.html");
 }
 
 function setEventListeners() {

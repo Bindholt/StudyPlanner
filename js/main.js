@@ -1,22 +1,29 @@
 "use strict";
 import { fetchBaas } from "./rest-services.js";
+import {checkUser, setStudyGroup} from "./checkUser.js";
 
 window.addEventListener("load", main);
 const group = localStorage.getItem("groupName");
 let memberArray = [];
 
 async function main() {
+  handleCheckUser();
   setUserNameHTML();
   setEventListeners();
   
   if(group && group.length > 0) {
-    console.log("here");
     handleGroupHTML();
     hasGroupHideLinks();
   } else {
     noGroupHideLinks();
   }
 }
+
+function handleCheckUser() {
+    checkUser();
+    setStudyGroup();
+}
+
 
 function hasGroupHideLinks() {
   document.querySelector("#add_user_to_group").style.display = "none";

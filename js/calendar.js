@@ -1,5 +1,6 @@
 "use strict";
 import { fetchBaas } from "./rest-services.js";
+import {checkUser, setStudyGroup, groupMustBeSet} from "./checkUser.js";
 window.addEventListener("load", main);
 
 const endpoint = "https://studyplanner-ad697-default-rtdb.europe-west1.firebasedatabase.app/"; 
@@ -8,8 +9,8 @@ let year = new Date().getFullYear();
 const groupName = (localStorage.getItem("groupName").length > 0 ? localStorage.getItem("groupName") : "testGroup")
 
 async function main(event) {
+    handleCheckUser(); 
     setEventListeners();
-    
     document.querySelector("h1").innerText = groupName;
     const monthlyEvents = await getMonthlyEvents();
     const daysArray = getDaysOfMonth();
@@ -18,6 +19,12 @@ async function main(event) {
     setYearMonthHTML();
 
     setDialogHTML();
+}
+
+function handleCheckUser() {
+    checkUser();
+    setStudyGroup();
+    groupMustBeSet("/main.html");
 }
 
 function setDaysHTML(daysArray, monthlyEvents) {    
