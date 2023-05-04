@@ -46,7 +46,7 @@ async function addUserInG(event) {
       const groupResponse = await fetchBaas(patchGroupNameIntoMemberURL, "PATCH", groupData);
     
       if (memberResponse.ok && groupResponse.ok) {
-        goToMain();
+        groupJoined();
       } else {
         showErrorM("Error: Something went wrong");
         return;
@@ -60,6 +60,11 @@ async function addUserInG(event) {
 
 function showErrorM(Msg) {
   document.querySelector("#error_msg").innerText = Msg;
+}
+
+async function groupJoined() {
+  await setStudyGroup();
+  goToMain();
 }
 
 function goToMain() {

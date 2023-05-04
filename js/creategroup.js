@@ -50,7 +50,7 @@ async function createGroup(event) {
     const memberResponse = await fetchBaas(patchGroupNameInUserURL, "PATCH", groupNameData)
 
     if (groupResponse.ok && codeResponse.ok && memberResponse.ok) {
-      goToMain();
+      groupCreated();
     } else {
       console.log("There was an error");
     }
@@ -102,6 +102,11 @@ async function doesCodeExist(inviteCode) {
 
 function showErrorMsg(msg) {
   document.querySelector(".error_msg").innerText = msg;
+}
+
+async function groupCreated() {
+  await setStudyGroup();
+  goToMain();
 }
 
 function goToMain() {

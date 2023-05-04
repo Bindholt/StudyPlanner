@@ -34,8 +34,17 @@ async function leaveGroup() {
     const fromUserResponse = await fetchBaas(deleteGroupFromUserURL, "DELETE");
 
     if (fromGroupResponse.ok && fromUserResponse.ok) {
-        window.location = "/main.html";
+        groupLeft();
     } else {
         console.log("something went horribly wrong");
     }
+}
+
+async function groupLeft() {
+    await setStudyGroup();
+    goToMain();
+}
+
+function goToMain() {
+    window.location = "/main.html";
 }
