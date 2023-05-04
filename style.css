@@ -55,3 +55,26 @@ input[type="button"]:hover {
 .error_msg {
   color:red;
 }
+
+.back_to_main {
+  position: absolute;
+  top:1%;
+  right: 5%;
+  width: 10em;
+  font-size: 15px;
+  font-style: bold;
+  background-color: #299c46;
+  padding: 3px;
+  height: 28,8px;
+  margin-bottom: 5em;
+  border-radius: 5px;
+  background-color: #299c46;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: solid 2px black;
+  text-align: center;
+}
+
+.back_to_main:hover {
+  background-color: #206a30;
+}

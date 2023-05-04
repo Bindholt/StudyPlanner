@@ -45,6 +45,8 @@ function setEventListeners() {
     );
     showSearchChat(matchingChats);
   });
+  
+  document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
 }
 
 function prepareData(dataObject) {

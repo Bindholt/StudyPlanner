@@ -86,6 +86,7 @@ function setEventListeners() {
     document.querySelector("#next").addEventListener("mouseup", incrementMonth);
     document.querySelector("#event_from").addEventListener("change", setUntilDateSelectHTML);
     document.querySelector("#date_form").addEventListener("submit", postEvent);
+    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
 }
 
 async function incrementMonth() {

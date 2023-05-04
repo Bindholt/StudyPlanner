@@ -6,7 +6,7 @@ h1 {
 .logout {
   position: absolute;
   top:1%;
-  right: 1%
+  right: 1%;
 }
 
 #user_name {
@@ -34,7 +34,6 @@ h1 {
   transition: background-color 0.3s ease;
   border: solid 2px black;
   text-align: center;
-  
 }
 
 .redirect:hover {

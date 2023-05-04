@@ -7,7 +7,7 @@ const user = localStorage.getItem("userName");
 const group = localStorage.getItem("groupName");
 
 async function main() {
-    handleCheckUser
+    handleCheckUser();
     setGroupNameHTML();
     setEventListener();
 }
@@ -23,6 +23,7 @@ function setGroupNameHTML() {
 
 function setEventListener() {
     document.querySelector("#btn_leave").addEventListener("mouseup", leaveGroup);
+    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
 }
 
 async function leaveGroup() {

@@ -8,7 +8,12 @@ const user = localStorage.getItem("userName");
 
 function main(event) {
   handleCheckUser();
+  setEventListeners();
+}
+
+function setEventListeners() {
   document.querySelector("#create_group").addEventListener("submit", createGroup);
+  document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
 }
 
 function handleCheckUser() {

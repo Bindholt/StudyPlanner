@@ -1,6 +1,6 @@
 "use strict";
 import { fetchBaas } from "./restServices.js";
-import {checkUser, setStudyGroup, groupMustBeSet} from "./checkUser.js";
+import {checkUser, setStudyGroup, groupMustNotBeSet} from "./checkUser.js";
 
 window.addEventListener("load", main)
 
@@ -8,13 +8,18 @@ const user = localStorage.getItem("userName");
 
 function main() {
   handleCheckUser();
+  setEventListeners();
+}
+
+function setEventListeners() {
   document.querySelector("#add_user_to_group").addEventListener("submit", addUserInG);
+  document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
 }
 
 function handleCheckUser() {
     checkUser();
     setStudyGroup();
-    groupMustBeSet("/main.html");
+    groupMustNotBeSet("/main.html");
 }
 
 async function addUserInG(event) {
