@@ -13,7 +13,6 @@ function main(event) {
 function handleCheckUser() {
     checkUser();
     setStudyGroup();
-    groupMustNotBeSet("/main.html");
 }
 
 function setEventListeners() {
