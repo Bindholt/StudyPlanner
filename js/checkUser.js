@@ -20,7 +20,7 @@ function groupMustNotBeSet(redirect) {
 function checkUser() {
     const userName = localStorage.getItem("userName");
     if(!userName || userName.length <= 0) {
-        window.location = "/login.html";
+        window.location = "/StudyPlanner/login.html";
         return;
     } 
     return userName;

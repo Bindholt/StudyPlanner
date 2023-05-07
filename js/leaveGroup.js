@@ -15,7 +15,7 @@ async function main() {
 function handleCheckUser() {
     checkUser();
     setStudyGroup();
-    groupMustBeSet("/main.html");
+    groupMustBeSet("/StudyPlanner/main.html");
 }
 function setGroupNameHTML() {
     document.querySelector("h1").innerHTML = group;
@@ -23,7 +23,7 @@ function setGroupNameHTML() {
 
 function setEventListener() {
     document.querySelector("#btn_leave").addEventListener("mouseup", leaveGroup);
-    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
+    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/StudyPlanner/main.html");
 }
 
 async function leaveGroup() {
@@ -46,5 +46,5 @@ async function groupLeft() {
 }
 
 function goToMain() {
-    window.location = "/main.html";
+    window.location = "/StudyPlanner/main.html";
 }

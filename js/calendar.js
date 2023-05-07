@@ -24,7 +24,7 @@ async function main(event) {
 function handleCheckUser() {
     checkUser();
     setStudyGroup();
-    groupMustBeSet("/main.html");
+    groupMustBeSet("/StudyPlanner/main.html");
 }
 
 function setDaysHTML(daysArray, monthlyEvents) {    
@@ -86,7 +86,7 @@ function setEventListeners() {
     document.querySelector("#next").addEventListener("mouseup", incrementMonth);
     document.querySelector("#event_from").addEventListener("change", setUntilDateSelectHTML);
     document.querySelector("#date_form").addEventListener("submit", postEvent);
-    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
+    document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/StudyPlanner/main.html");
 }
 
 async function incrementMonth() {

@@ -14,13 +14,13 @@ function main(event) {
 
 function setEventListeners() {
   document.querySelector("#create_group").addEventListener("submit", createGroup);
-  document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/main.html");
+  document.querySelector(".back_to_main").addEventListener("mouseup", () => window.location = "/StudyPlanner/main.html");
 }
 
 function handleCheckUser() {
   checkUser();
   setStudyGroup();
-  groupMustNotBeSet("/main.html");
+  groupMustNotBeSet("/StudyPlanner/main.html");
 }
 
 
@@ -110,5 +110,5 @@ async function groupCreated() {
 }
 
 function goToMain() {
-  window.location = "/main.html";
+  window.location = "/StudyPlanner/main.html";
 }

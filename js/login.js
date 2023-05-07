@@ -31,7 +31,7 @@ async function login(event) {
         if (await userData) {
             if(await validPin(userData.pin)) { 
                 await setLocalStorage(userData);
-                window.location = "/main.html";
+                window.location = "/StudyPlanner/main.html";
             } else {
                 showErrorMsgPin();
             }
@@ -57,7 +57,7 @@ async function setLocalStorage(userData) {
 }
 
 function goToCreate() {
-    window.location = "/create.html";
+    window.location = "/StudyPlanner/create.html";
 }
 
 function showErrorMsgPin() {

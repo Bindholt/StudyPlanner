@@ -40,7 +40,7 @@ async function createUser(event) {
         const userResponse = await fetchBaas(putUserURL, "PUT", userData);
         
         if(userResponse.ok) {
-            window.location = "/login.html";
+            window.location = "/StudyPlanner/login.html";
         }  
     } else {
         showErrorMsg();
@@ -84,5 +84,5 @@ function showErrorMsg() {
 }
 
 function goToLogin() {
-    window.location = "/login.html";
+    window.location = "/StudyPlanner/login.html";
 }

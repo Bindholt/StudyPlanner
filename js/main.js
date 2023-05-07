@@ -43,11 +43,11 @@ function setUserNameHTML() {
 }
 
 function setEventListeners() {
-  document.querySelector("#create_group").addEventListener("mouseup", () => window.location = "createGroup.html");
-  document.querySelector("#add_user_to_group").addEventListener("mouseup", () => window.location = "addUserToGroup.html");
-  document.querySelector("#calendar").addEventListener("mouseup", () => window.location = "calendar.html");
-  document.querySelector("#chat").addEventListener("mouseup", () => window.location = "chat.html");
-  document.querySelector("#leave_group").addEventListener("mouseup", () => window.location = "leaveGroup.html");
+  document.querySelector("#create_group").addEventListener("mouseup", () => window.location = "StudyPlanner/createGroup.html");
+  document.querySelector("#add_user_to_group").addEventListener("mouseup", () => window.location = "/StudyPlanner/addUserToGroup.html");
+  document.querySelector("#calendar").addEventListener("mouseup", () => window.location = "/StudyPlanner/calendar.html");
+  document.querySelector("#chat").addEventListener("mouseup", () => window.location = "/StudyPlanner/chat.html");
+  document.querySelector("#leave_group").addEventListener("mouseup", () => window.location = "/StudyPlanner/leaveGroup.html");
   document.querySelector("#change_user").addEventListener("mouseup", logout);
 }
 
@@ -123,5 +123,5 @@ function logout() {
   localStorage.removeItem("userName");
   localStorage.removeItem("groupName");
   
-  window.location = "/login.html";
+  window.location = "/StudyPlanner/login.html";
 }
